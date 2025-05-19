@@ -1,5 +1,5 @@
 {
-  "name": "monorepo-react-node-boilerplate",
+  "name": "call-management-system",
   "version": "1.0.0",
   "workspaces": [
     "apps/client",
