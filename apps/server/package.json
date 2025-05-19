@@ -1,0 +1,33 @@
+{
+  "name": "express-ts-boilerplate",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint  --ext ts --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint  --ext ts --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.17",
+    "eslint-plugin-node": "^11.1.0",
+    "tsx": "^4.19.4"
+  }
+}
