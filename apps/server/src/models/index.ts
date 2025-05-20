@@ -1,16 +1,13 @@
 import { sequelize } from "@config/database";
+import User from "./user";
 
 // TODO: Import models here when created
-// import User from './user';
 // import Tag from './tag';
 // import Call from './call';
 // import Task from './task';
 
 // //TODO: Set up associations between models here when created
-const initializeModels = (): void => {
-  // User.hasMany(Call);
-  // Call.belongsTo(User);
-};
+const initializeModels = (): void => {};
 
 const syncDatabase = async (force = false): Promise<void> => {
   try {
@@ -29,7 +26,7 @@ export {
   initializeModels,
   syncDatabase,
   // TODO: Export models here when created
-  // User,
+  User,
   // Tag,
   // Call,
   // Task

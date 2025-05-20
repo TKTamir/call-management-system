@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { testConnection } from "@config/database";
 import { syncDatabase } from "@models/index";
+import authRoutes from "@routes/authRoutes";
 
 dotenv.config();
 
@@ -13,8 +14,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello from the Express Typescript backend!");
+  res.send("Call Management API is running");
 });
+
+app.use("/api/auth", authRoutes);
 
 const startServer = async (): Promise<void> => {
   try {

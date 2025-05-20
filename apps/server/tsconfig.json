@@ -9,7 +9,12 @@
     "baseUrl": "./src",
     "paths": {
       "@config/*": ["config/*"],
-      "@models/*": ["models/*"]
+      "@models/*": ["models/*"],
+      "@controllers/*": ["controllers/*"],
+      "@middleware/*": ["middleware/*"],
+      "@routes/*": ["routes/*"],
+      "@utils/*": ["utils/*"],
+      "@internal-types/*": ["types/*"]
     }
   },
   "include": ["src"]
