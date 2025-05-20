@@ -12,11 +12,7 @@
     "client:build": "cd apps/client && npm run build",
     "server:build": "cd apps/server && npm run build",
     "build": "npm run client:build && npm run server:build",
-    "client:lint": "cd apps/client && npm run lint",
-    "server:lint": "cd apps/server && npm run lint",
     "lint": "npm run client:lint && npm run server:lint",
-    "client:format": "cd apps/client && npm run format",
-    "server:format": "cd apps/server && npm run format",
     "format": "npm run client:format && npm run server:format",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
