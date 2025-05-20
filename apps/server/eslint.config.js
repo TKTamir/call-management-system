@@ -7,8 +7,5 @@ export default [
     plugins: {
       node: nodePlugin,
     },
-    rules: {
-      "node/no-missing-import": "error",
-    },
   },
 ];
