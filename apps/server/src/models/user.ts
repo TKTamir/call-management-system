@@ -2,7 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "@config/database";
 import {
   type UserAttributes,
-  UserCreationAttributes,
+  type UserCreationAttributes,
 } from "@internal-types/user";
 
 class User
