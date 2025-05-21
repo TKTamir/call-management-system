@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
 import { JWT_REFRESH_SECRET_STRICT, JWT_SECRET_STRICT } from "@config/jwt";
-import { TokenPayload } from "@internal-types/user";
+import { type TokenPayload } from "@internal-types/user";
 
 dotenv.config();
 
