@@ -1,3 +1,5 @@
+import {Optional} from "sequelize";
+
 export interface UserAttributes {
   id: number;
   username: string;
@@ -7,6 +9,9 @@ export interface UserAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface UserCreationAttributes
+  extends Optional<UserAttributes, "id" | "createdAt" | "updatedAt"> {}
 
 export interface TokenPayload {
   id: number;
