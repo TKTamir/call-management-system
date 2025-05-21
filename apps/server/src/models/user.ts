@@ -1,18 +1,9 @@
-import { Model, DataTypes, Optional } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import { sequelize } from "@config/database";
-
-interface UserAttributes {
-  id: number;
-  username: string;
-  password: string;
-  email: string;
-  role: "admin" | "user";
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-interface UserCreationAttributes
-  extends Optional<UserAttributes, "id" | "createdAt" | "updatedAt"> {}
+import {
+  type UserAttributes,
+  type UserCreationAttributes,
+} from "@internal-types/user";
 
 class User
   extends Model<UserAttributes, UserCreationAttributes>
