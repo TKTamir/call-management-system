@@ -1,4 +1,4 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, Transaction } from "sequelize";
 import { sequelize } from "@config/database";
 import Task from "@models/task";
 import { type TagAttributes, type TagInput } from "@internal-types/models/tag";
@@ -10,11 +10,15 @@ class Tag extends Model<TagAttributes, TagInput> implements TagAttributes {
   declare readonly createdAt: Date;
   declare readonly updatedAt: Date;
 
-  // Association with tasks
+  // Associated data property
+  declare suggestedTasks?: Task[];
+
+  // Task associations
+  declare addSuggestedTask: (
+    task: Task,
+    options?: { transaction?: Transaction },
+  ) => Promise<void>;
   declare getSuggestedTasks: () => Promise<Task[]>;
-  declare setSuggestedTasks: (tasks: Task[]) => Promise<void>;
-  declare addSuggestedTask: (task: Task) => Promise<void>;
-  declare removeSuggestedTask: (task: Task) => Promise<void>;
 }
 
 Tag.init(
