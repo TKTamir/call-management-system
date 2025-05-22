@@ -1,7 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "@config/database";
 import Task from "@models/task";
-import { TagAttributes, TagInput } from "@internal-types/tag";
+import { type TagAttributes, type TagInput } from "@internal-types/models/tag";
 
 class Tag extends Model<TagAttributes, TagInput> implements TagAttributes {
   declare id: number;
