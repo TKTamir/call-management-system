@@ -3,8 +3,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { testConnection } from "@config/database";
 import { syncDatabase } from "@models/index";
-import authRoutes from "@routes/authRoutes";
 import { errorMiddleware } from "@middleware/errorMiddleware";
+import authRoutes from "@routes/authRoutes";
+import callRoutes from "@routes/callRoutes";
+import tagRoutes from "@routes/tagRoutes";
+import taskRoutes from "@routes/taskRoutes";
+import adminRoutes from "@routes/adminRoutes";
 
 dotenv.config();
 
@@ -19,6 +23,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/calls", callRoutes);
+app.use("/api/tags", tagRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use(errorMiddleware);
 
