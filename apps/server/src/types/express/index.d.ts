@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import * as express from "express";
-import { TokenPayload } from "@internal-types/user";
+import { type TokenPayload } from "@internal-types/models/user";
 
 declare global {
   namespace Express {
