@@ -144,7 +144,7 @@ const getSuggestedTasksForTagsHandler = async (
     include: [
       {
         association: "suggestedTasks",
-        attributes: ["id", "name", "description"],
+        attributes: ["id", "name"],
       },
     ],
   });
@@ -182,7 +182,7 @@ const getAllTagTaskAssociationsHandler = async (
       },
       {
         model: Task,
-        attributes: ["id", "name", "description"],
+        attributes: ["id", "name"],
         where: {
           isSuggested: true,
         },
