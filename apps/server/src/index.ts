@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { testConnection } from "@config/database";
 import { syncDatabase } from "@models/index";
 import authRoutes from "@routes/authRoutes";
+import { errorMiddleware } from "@middleware/errorMiddleware";
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+
+app.use(errorMiddleware);
 
 const startServer = async (): Promise<void> => {
   try {
