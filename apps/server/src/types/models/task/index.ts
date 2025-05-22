@@ -3,6 +3,7 @@ import { Optional } from "sequelize";
 export interface TaskAttributes {
   id: number;
   name: string;
+  isSuggested?: boolean
   createdAt?: Date;
   updatedAt?: Date;
 }

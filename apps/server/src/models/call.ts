@@ -1,4 +1,4 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, Transaction } from "sequelize";
 import { sequelize } from "@config/database";
 import Tag from "@models/tag";
 import Task from "@models/task";
@@ -15,16 +15,17 @@ class Call extends Model<CallAttributes, CallInput> implements CallAttributes {
   declare readonly updatedAt: Date;
 
   // Associations with tags
+  declare addTags: (
+    tags: Tag[],
+    options?: { transaction?: Transaction },
+  ) => Promise<void>;
   declare getTags: () => Promise<Tag[]>;
-  declare setTags: (tags: Tag[]) => Promise<void>;
-  declare addTag: (tag: Tag) => Promise<void>;
-  declare removeTag: (tag: Tag) => Promise<void>;
 
   // Association with tasks
-  declare getTasks: () => Promise<Task[]>;
-  declare setTasks: (tasks: Task[]) => Promise<void>;
-  declare addTask: (task: Task) => Promise<void>;
-  declare removeTask: (task: Task) => Promise<void>;
+  declare addTask: (
+    task: Task,
+    options?: { through?: { taskStatus?: string }; transaction?: Transaction },
+  ) => Promise<void>;
 }
 
 Call.init(
