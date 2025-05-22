@@ -2,8 +2,15 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "@config/database";
 import Call from "@models/call";
 import Tag from "@models/tag";
+import {
+  type CallTagAttributes,
+  type CallTagInput,
+} from "@internal-types/models/call-tag";
 
-class CallTag extends Model {
+class CallTag
+  extends Model<CallTagAttributes, CallTagInput>
+  implements CallTagAttributes
+{
   declare callId: number;
   declare tagId: number;
 

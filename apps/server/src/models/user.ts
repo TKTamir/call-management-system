@@ -3,7 +3,7 @@ import { sequelize } from "@config/database";
 import {
   type UserAttributes,
   type UserCreationAttributes,
-} from "@internal-types/user";
+} from "@internal-types/models/user";
 
 class User
   extends Model<UserAttributes, UserCreationAttributes>

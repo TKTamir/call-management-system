@@ -2,8 +2,15 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "@config/database";
 import Call from "@models/call";
 import Task from "@models/task";
+import {
+  type CallTaskAttributes,
+  type CallTaskInput,
+} from "@internal-types/models/call-task";
 
-class CallTask extends Model {
+class CallTask
+  extends Model<CallTaskAttributes, CallTaskInput>
+  implements CallTaskAttributes
+{
   declare callId: number;
   declare taskId: number;
   declare taskStatus: "Open" | "In Progress" | "Completed";

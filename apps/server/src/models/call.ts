@@ -2,7 +2,10 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "@config/database";
 import Tag from "@models/tag";
 import Task from "@models/task";
-import { type CallAttributes, type CallInput } from "@internal-types/call";
+import {
+  type CallAttributes,
+  type CallInput,
+} from "@internal-types/models/call";
 
 class Call extends Model<CallAttributes, CallInput> implements CallAttributes {
   declare id: number;
