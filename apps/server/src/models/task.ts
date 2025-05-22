@@ -27,6 +27,7 @@ Task.init(
     },
     isSuggested: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: false,
     },
   },
