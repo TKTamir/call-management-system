@@ -21,14 +21,14 @@ export const comparePassword = async (
   return bcrypt.compare(password, hashedPassword);
 };
 
-export const generateAccessToken = (userId: number, role: string): string => {
-  return jwt.sign({ userId, role }, JWT_SECRET_STRICT, {
+export const generateAccessToken = (id: number, role: string): string => {
+  return jwt.sign({ id, role }, JWT_SECRET_STRICT, {
     expiresIn: ACCESS_TOKEN_EXPIRY,
   });
 };
 
-export const generateRefreshToken = (userId: number): string => {
-  return jwt.sign({ userId }, JWT_REFRESH_SECRET_STRICT, {
+export const generateRefreshToken = (id: number): string => {
+  return jwt.sign({ id }, JWT_REFRESH_SECRET_STRICT, {
     expiresIn: REFRESH_TOKEN_EXPIRY,
   });
 };
@@ -62,10 +62,10 @@ export const verifyRefreshToken = (token: string): TokenPayload | null => {
 };
 
 export const generateTokens = (
-  userId: number,
+  id: number,
   role: string,
 ): { accessToken: string; refreshToken: string } => {
-  const accessToken = generateAccessToken(userId, role);
-  const refreshToken = generateRefreshToken(userId);
+  const accessToken = generateAccessToken(id, role);
+  const refreshToken = generateRefreshToken(id);
   return { accessToken, refreshToken };
 };
