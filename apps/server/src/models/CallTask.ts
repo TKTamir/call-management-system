@@ -1,11 +1,11 @@
 import { DataTypes, Model } from "sequelize";
-import { sequelize } from "@config/database";
-import Call from "@models/call";
-import Task from "@models/task";
+import { sequelize } from "../config/database";
+import Call from "../models/call";
+import Task from "../models/task";
 import {
   type CallTaskAttributes,
   type CallTaskInput,
-} from "@internal-types/models/call-task";
+} from "../types/models/call-task";
 
 class CallTask
   extends Model<CallTaskAttributes, CallTaskInput>

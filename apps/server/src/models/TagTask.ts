@@ -1,11 +1,11 @@
 import { DataTypes, Model } from "sequelize";
-import { sequelize } from "@config/database";
-import Tag from "@models/tag";
-import Task from "@models/task";
+import { sequelize } from "../config/database";
+import Tag from "../models/tag";
+import Task from "../models/task";
 import {
   type TagTaskAttributes,
   type TagTaskInput,
-} from "@internal-types/models/tag-task";
+} from "../types/models/tag-task";
 
 class TagTask
   extends Model<TagTaskAttributes, TagTaskInput>

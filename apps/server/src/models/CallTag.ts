@@ -1,11 +1,11 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "@config/database";
-import Call from "@models/call";
-import Tag from "@models/tag";
+import { sequelize } from "../config/database";
+import Call from "../models/call";
+import Tag from "../models/tag";
 import {
   type CallTagAttributes,
   type CallTagInput,
-} from "@internal-types/models/call-tag";
+} from "../types/models/call-tag";
 
 class CallTag
   extends Model<CallTagAttributes, CallTagInput>
