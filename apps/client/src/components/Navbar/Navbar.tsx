@@ -1,14 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../Button/Button";
 
 interface NavbarProps {
-  activeView: "adminDashboard" | "userDashboard";
+  currentPath: string;
   onLogout: () => void;
   onLoginClick: () => void;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
-  onTagsClick?: () => void;
-  onCallsClick?: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -16,26 +15,26 @@ const Navbar: React.FC<NavbarProps> = ({
   isLoggedIn,
   isAdmin,
   onLoginClick,
-  activeView,
-  onTagsClick,
-  onCallsClick,
+  currentPath,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <header className="fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-4 border-b bg-white z-10">
       <div className="text-lg font-semibold">📞 Cytactic</div>
 
-      {/* Center buttons - only visible for admin users when in admin view */}
+      {/* Navigation buttons for admin users */}
       {isAdmin && isLoggedIn && (
         <div className="flex items-center gap-4">
           <Button
             buttonText="Admin"
-            onClick={onTagsClick || (() => {})}
-            className={`px-4 ${activeView === "adminDashboard" ? "bg-gray-100" : ""}`}
+            onClick={() => navigate("/admin")}
+            className={`px-4 ${currentPath === "/admin" ? "bg-gray-100" : ""}`}
           />
           <Button
             buttonText="User"
-            onClick={onCallsClick || (() => {})}
-            className={`px-4 ${activeView === "userDashboard" ? "bg-gray-100" : ""}`}
+            onClick={() => navigate("/dashboard")}
+            className={`px-4 ${currentPath === "/dashboard" ? "bg-gray-100" : ""}`}
           />
         </div>
       )}
