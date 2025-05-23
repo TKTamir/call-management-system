@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Task from "@models/task";
 import { createHandler } from "@utils/routeHandler";
+import { socketService } from "@sockets/socket";
 
 // Get all tasks
 // Used for development purposes
@@ -87,7 +88,7 @@ const createSuggestedTaskHandler = async (
   });
 
   // Socket.io emit for live updates
-  // io.emit('taskCreated', task);
+  socketService.emitTaskCreated(task);
 
   res.status(201).json({
     success: true,
@@ -135,8 +136,7 @@ const updateSuggestedTaskHandler = async (
   await task.update({ name });
 
   // Socket.io emit for live updates
-  // io.emit('taskUpdated', task);
-  // });
+  socketService.emitTaskUpdated(task);
 
   res.status(200).json({
     success: true,

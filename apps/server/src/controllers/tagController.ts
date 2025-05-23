@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
 import Tag from "@models/tag";
 import { createHandler } from "@utils/routeHandler";
+import { socketService } from "@sockets/socket";
 
 // Get all tags
 // Responds with all tags both for the Admin view and the User view
@@ -66,7 +67,7 @@ const createTagHandler = async (
   const tag = await Tag.create({ name });
 
   // Socket.io emit for live updates
-  // io.emit('tagCreated', tag);
+  socketService.emitTagCreated(tag);
 
   res.status(201).json({
     success: true,
@@ -120,9 +121,7 @@ const updateTagHandler = async (
   await tag.update({ name });
 
   // Socket.io emit for live updates
-  // io.emit('tagUpdated', {
-  //   tag
-  // });
+  socketService.emitTagUpdated(tag);
 
   res.status(200).json({
     success: true,
