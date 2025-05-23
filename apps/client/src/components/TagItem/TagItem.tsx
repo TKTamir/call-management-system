@@ -14,7 +14,7 @@ const TagItem: React.FC<TagItemProps> = ({
   return (
     <div className={`flex items-center justify-between ${className}`}>
       <span>{name}</span>
-      {highlightIcon && <span className="ml-2">+️</span>}
+      {highlightIcon && <span className="ml-2 text-yellow-500">✏️</span>}
     </div>
   );
 };
