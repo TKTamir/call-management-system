@@ -33,7 +33,7 @@ export interface CallAttributes {
 }
 
 // Define the events interface for type safety
-interface ServerToClientEvents {
+export interface ServerToClientEvents {
   // Tag events
   tagCreated: (tag: TagAttributes) => void;
   tagUpdated: (tag: TagAttributes) => void;
@@ -57,7 +57,7 @@ interface ServerToClientEvents {
   tagSuggestedTaskAdded: (data: { tagId: number; taskId: number }) => void;
 }
 
-interface ClientToServerEvents {
+export interface ClientToServerEvents {
   // Currently no client-to-server events needed
 }
 
