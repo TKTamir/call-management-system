@@ -1,21 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "admin" | "user";
+  requiredRole?: "admin" | "user" | "both";
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
 }) => {
-  const { isAuthenticated, isAdmin, user } = useAuth();
+  const { isAuthenticated, isAdmin, isLoading, user, refreshUserData } =
+    useAuth();
+
+  useEffect(() => {
+    // Refresh user data when entering protected route
+    if (isAuthenticated) {
+      refreshUserData();
+    }
+  }, [isAuthenticated]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Check role-based access

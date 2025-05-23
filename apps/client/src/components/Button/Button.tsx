@@ -5,6 +5,7 @@ interface ButtonProps {
   className?: string;
   buttonText?: string;
   children?: React.ReactNode;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -12,10 +13,12 @@ const Button: React.FC<ButtonProps> = ({
   buttonText = "Submit",
   className,
   children,
+  disabled,
 }) => (
   <button
-    className={`text-md hover:bg-gray-200 border rounded-md px-2 py-2 cursor-pointer ${className}`}
+    className={`text-md border rounded-md px-2 py-2 cursor-pointer hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     onClick={onClick}
+    disabled={disabled}
   >
     {children || buttonText}
   </button>

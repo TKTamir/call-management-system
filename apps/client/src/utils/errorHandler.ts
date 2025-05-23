@@ -18,7 +18,7 @@ export const isSerializedError = (error: unknown): error is SerializedError => {
 };
 
 export const getErrorMessage = (
-  error: FetchBaseQueryError | SerializedError | undefined,
+  error: FetchBaseQueryError | SerializedError | unknown | undefined,
 ): string => {
   if (!error) return "An unknown error occurred";
 

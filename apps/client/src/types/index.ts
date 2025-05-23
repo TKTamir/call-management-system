@@ -42,6 +42,7 @@ export interface Task {
   id: number;
   name: string;
   isSuggested?: boolean;
+  taskStatus?: "Open" | "In Progress" | "Completed";
   createdAt?: Date;
   updatedAt?: Date;
 }
