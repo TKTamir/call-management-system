@@ -1,56 +1,25 @@
 import { io, Socket } from "socket.io-client";
-
-//TODO: Move the Interfaces to a different dir
-
-export interface TagAttributes {
-  id: number;
-  name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface TaskAttributes {
-  id: number;
-  name: string;
-  isSuggested?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface CallTaskAttributes {
-  callId: number;
-  taskId: number;
-  taskStatus: "Open" | "In Progress" | "Completed";
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface CallAttributes {
-  id: number;
-  name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import type { Call, CallTask, Tag, Task } from "../types";
 
 // Define the events interface for type safety
 interface ServerToClientEvents {
   // Tag events
-  tagCreated: (tag: TagAttributes) => void;
-  tagUpdated: (tag: TagAttributes) => void;
+  tagCreated: (tag: Tag) => void;
+  tagUpdated: (tag: Tag) => void;
 
   // Task events
-  taskCreated: (task: TaskAttributes) => void;
-  taskUpdated: (task: TaskAttributes) => void;
+  taskCreated: (task: Task) => void;
+  taskUpdated: (task: Task) => void;
 
   // Call events
-  callCreated: (call: CallAttributes) => void;
+  callCreated: (call: Call) => void;
   callTagsAdded: (data: { callId: number; tagIds: number[] }) => void;
-  callTaskAdded: (data: { callId: number; task: TaskAttributes }) => void;
+  callTaskAdded: (data: { callId: number; task: Task }) => void;
   callTaskStatusUpdated: (data: {
     callId: number;
     taskId: number;
-    taskStatus: string;
-    callTask: CallTaskAttributes;
+    taskStatus: "Open" | "In Progress" | "Completed";
+    callTask: CallTask;
   }) => void;
 
   // Tag-Task association events
