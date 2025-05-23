@@ -21,7 +21,7 @@ interface ServerToClientEvents {
   callTaskStatusUpdated: (data: {
     callId: number;
     taskId: number;
-    taskStatus: string;
+    taskStatus: "Open" | "In Progress" | "Completed";
     callTask: CallTaskAttributes;
   }) => void;
 
@@ -133,7 +133,7 @@ class SocketService {
   public emitCallTaskStatusUpdated(data: {
     callId: number;
     taskId: number;
-    taskStatus: string;
+    taskStatus: "Open" | "In Progress" | "Completed";
     callTask: CallTaskAttributes;
   }): void {
     this.getIO().emit("callTaskStatusUpdated", data);

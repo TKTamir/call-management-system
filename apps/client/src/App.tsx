@@ -1,11 +1,16 @@
+import React from "react";
 import "./App.css";
+import { AppProvider } from "./providers/AppProvider";
+import AppContent from "./components/AppContent/AppContent";
+import { ToastContainer } from "react-toastify";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="flex flex-col h-full">
-      <div className="bg-red-200">Hello World</div>
-    </div>
+    <AppProvider>
+      <AppContent />
+      <ToastContainer />
+    </AppProvider>
   );
-}
+};
 
 export default App;
