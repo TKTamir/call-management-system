@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import Container from "../components/Container/Container";
 import Input from "../components/Input/Input";
 import Button from "../components/Button/Button";
@@ -12,6 +13,7 @@ import {
   useCreateSuggestedTaskMutation,
   useAddSuggestedTaskToTagMutation,
   useGetTagSuggestedTasksQuery,
+  useUpdateTagMutation,
 } from "../store/api";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
@@ -38,11 +40,15 @@ const AdminDashboard: React.FC = () => {
   const [addSuggestedTaskToTag, { isLoading: isLinkingTask }] =
     useAddSuggestedTaskToTagMutation();
 
+  const [updateTag, { isLoading: isUpdatingTag, error: updateTagError }] =
+    useUpdateTagMutation();
+
   // Error handling
   useErrorHandler(tagsError);
   useErrorHandler(tasksError);
   useErrorHandler(createTagError);
   useErrorHandler(createTaskError);
+  useErrorHandler(updateTagError);
 
   // Local state for UI
   const [activeView, setActiveView] = useState<"tags" | "suggestedTasks">(
@@ -50,6 +56,7 @@ const AdminDashboard: React.FC = () => {
   );
   const [newTagName, setNewTagName] = useState("");
   const [newSuggestedTaskName, setNewSuggestedTaskName] = useState("");
+  const [editingTagName, setEditingTagName] = useState("");
 
   // Modal state for linking suggested tasks to tags
   const [showLinkTasksModal, setShowLinkTasksModal] = useState(false);
@@ -100,7 +107,32 @@ const AdminDashboard: React.FC = () => {
   // Handle tag click to open link tasks modal
   const handleTagClick = (tag: { id: number; name: string }) => {
     setSelectedTagForLinking(tag);
+    setEditingTagName(tag.name);
     setShowLinkTasksModal(true);
+  };
+
+  // Handle tag name update
+  const handleUpdateTagName = async () => {
+    if (!selectedTagForLinking || !editingTagName.trim()) return;
+
+    if (editingTagName.trim() === selectedTagForLinking.name) return;
+
+    try {
+      await updateTag({
+        id: selectedTagForLinking.id,
+        data: { name: editingTagName.trim() },
+      }).unwrap();
+
+      // Update the local state to reflect the change
+      setSelectedTagForLinking({
+        ...selectedTagForLinking,
+        name: editingTagName.trim(),
+      });
+
+      toast.success(`Tag renamed to "${editingTagName.trim()}" successfully!`);
+    } catch (error) {
+      console.error("Failed to update tag name:", error);
+    }
   };
 
   // Link suggested task to tag
@@ -115,6 +147,12 @@ const AdminDashboard: React.FC = () => {
     } catch (error) {
       console.error("Failed to link task to tag:", error);
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowLinkTasksModal(false);
+    setSelectedTagForLinking(null);
+    setEditingTagName(""); // ADD this line
   };
 
   // Check if task is already linked
@@ -184,21 +222,42 @@ const AdminDashboard: React.FC = () => {
         />
       </Container>
 
-      {/* Modal for linking suggested tasks to tags */}
+      {/* Modal for linking suggested tasks to tags and editing tags */}
       <Modal
         isOpen={showLinkTasksModal}
-        onClose={() => {
-          setShowLinkTasksModal(false);
-          setSelectedTagForLinking(null);
-        }}
-        name={`Link Tasks to "${selectedTagForLinking?.name}"`}
+        onClose={handleCloseModal}
+        name={`Manage Tag: "${selectedTagForLinking?.name}"`}
         inputValue=""
         onInputChange={() => {}}
         onSubmit={() => {}}
         submitButtonText=""
       >
-        <div className="space-y-4">
-          <h4 className="font-medium">Available Suggested Tasks:</h4>
+        <div className="space-y-6">
+          <div className="border-b pb-4">
+            <h4 className="font-medium mb-3">Edit Tag Name:</h4>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={editingTagName}
+                onChange={(e) => setEditingTagName(e.target.value)}
+                className="flex-1 border rounded-md px-3 py-2"
+                placeholder="Tag name"
+                disabled={isUpdatingTag}
+              />
+              <Button
+                buttonText={isUpdatingTag ? "Saving..." : "Save"}
+                onClick={handleUpdateTagName}
+                disabled={
+                  isUpdatingTag ||
+                  !editingTagName.trim() ||
+                  editingTagName.trim() === selectedTagForLinking?.name
+                }
+                className="px-4 bg-blue-50 hover:bg-blue-100"
+              />
+            </div>
+          </div>
+
+          <h4 className="font-medium mb-3">Link Suggested Tasks:</h4>
           <div className="max-h-64 overflow-y-auto space-y-2">
             {suggestedTasks.map((task) => (
               <div
