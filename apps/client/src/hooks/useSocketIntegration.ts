@@ -27,14 +27,7 @@ export const useSocketIntegration = () => {
     const handleTagUpdated = (tag: Tag) => {
       console.log("🏷️ Tag updated via socket:", tag);
 
-      dispatch(
-        api.util.invalidateTags([
-          { type: "Tag", id: "LIST" },
-          { type: "Tag", id: tag.id },
-          { type: "Call", id: "LIST" },
-          { type: "CallTag", id: "LIST" },
-        ]),
-      );
+      dispatch(api.util.invalidateTags(["Tag", "CallTag", "Call"]));
     };
 
     // TASK EVENTS
