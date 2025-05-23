@@ -2,15 +2,15 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import * as http from "node:http";
-import { testConnection } from "@config/database";
-import { syncDatabase } from "@models/index";
-import { errorMiddleware } from "@middleware/errorMiddleware";
-import { socketService } from "@sockets/socket";
-import authRoutes from "@routes/authRoutes";
-import callRoutes from "@routes/callRoutes";
-import tagRoutes from "@routes/tagRoutes";
-import taskRoutes from "@routes/taskRoutes";
-import adminRoutes from "@routes/adminRoutes";
+import { testConnection } from "./config/database";
+import { syncDatabase } from "./models";
+import { errorMiddleware } from "./middleware/errorMiddleware";
+import { socketService } from "./sockets/socket";
+import authRoutes from "./routes/authRoutes";
+import callRoutes from "./routes/callRoutes";
+import tagRoutes from "./routes/tagRoutes";
+import taskRoutes from "./routes/taskRoutes";
+import adminRoutes from "./routes/adminRoutes";
 
 dotenv.config();
 
