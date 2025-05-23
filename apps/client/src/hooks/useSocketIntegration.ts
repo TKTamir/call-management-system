@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSocket } from "./useSocket";
 import { api } from "../store/api";
-import type { Tag, Task, Call, CallTask } from "../store/api";
+import type { Tag, Task, Call, CallTask } from "../types";
 
 //TODO: Remove Console.logs
 
@@ -110,7 +110,7 @@ export const useSocketIntegration = () => {
       );
     };
 
-    // TAG-TASK ASSOCIATION EVENTS (Bonus feature)
+    // TAG-TASK ASSOCIATION EVENTS
     const handleTagSuggestedTaskAdded = (data: {
       tagId: number;
       taskId: number;
