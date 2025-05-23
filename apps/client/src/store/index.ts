@@ -16,7 +16,7 @@ export const store = configureStore({
         ignoredActions: [api.util.resetApiState.type],
       },
     }).concat(api.middleware),
-  devTools: process.env.NODE_ENV !== "production",
+  devTools: import.meta.env.VITE_NODE_ENV !== "production",
 });
 
 // Enable automatic refetching on focus/reconnect
