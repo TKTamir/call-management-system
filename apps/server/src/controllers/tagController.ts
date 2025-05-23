@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
-import Tag from "@models/tag";
-import { createHandler } from "@utils/routeHandler";
-import { socketService } from "@sockets/socket";
+import Tag from "../models/tag";
+import { createHandler } from "../utils/routeHandler";
+import { socketService } from "../sockets/socket";
 
 // Get all tags
 // Responds with all tags both for the Admin view and the User view

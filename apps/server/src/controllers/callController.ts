@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import Call from "@models/call";
-import { createHandler } from "@utils/routeHandler";
-import { socketService } from "@sockets/socket";
+import Call from "../models/call";
+import { createHandler } from "../utils/routeHandler";
+import { socketService } from "../sockets/socket";
 
 // Get all calls
 // Used to get all calls to be displayed in the User view

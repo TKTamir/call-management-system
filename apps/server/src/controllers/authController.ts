@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { Op } from "sequelize";
-import User from "@models/user";
+import User from "../models/user";
 import {
   comparePassword,
   generateTokens,
   hashPassword,
   verifyRefreshToken,
-} from "@utils/auth";
-import { createHandler } from "@utils/routeHandler";
+} from "../utils/auth";
+import { createHandler } from "../utils/routeHandler";
 
 export const registerHandler = async (req: Request, res: Response) => {
   try {
