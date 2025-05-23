@@ -1,9 +1,11 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import * as http from "node:http";
 import { testConnection } from "@config/database";
 import { syncDatabase } from "@models/index";
 import { errorMiddleware } from "@middleware/errorMiddleware";
+import { socketService } from "@sockets/socket";
 import authRoutes from "@routes/authRoutes";
 import callRoutes from "@routes/callRoutes";
 import tagRoutes from "@routes/tagRoutes";
@@ -13,13 +15,27 @@ import adminRoutes from "@routes/adminRoutes";
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// Initialize Socket.io
+socketService.initialize(server);
 
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Call Management API is running");
+});
+
+// Get Socket.io status
+app.get("/api/status", (req: Request, res: Response) => {
+  const stats = socketService.getConnectionStats();
+  res.json({
+    success: true,
+    server: "running",
+    connections: stats,
+  });
 });
 
 app.use("/api/auth", authRoutes);
@@ -36,7 +52,7 @@ const startServer = async (): Promise<void> => {
 
     await syncDatabase(false);
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {

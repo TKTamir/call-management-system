@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Call from "@models/call";
 import { createHandler } from "@utils/routeHandler";
+import { socketService } from "@sockets/socket";
 
 // Get all calls
 // Used to get all calls to be displayed in the User view
@@ -66,7 +67,7 @@ const createCallHandler = async (
   const call = await Call.create({ name });
 
   // Socket.io emit for live updates
-  // io.emit('callCreated', call);
+  socketService.emitCallCreated(call);
 
   res.status(201).json({
     success: true,

@@ -8,13 +8,14 @@
     "rootDir": "./src",
     "baseUrl": "./src",
     "paths": {
-      "@config/*": ["config/*"],
-      "@models/*": ["models/*"],
       "@controllers/*": ["controllers/*"],
+      "@config/*": ["config/*"],
+      "@internal-types/*": ["types/*"],
       "@middleware/*": ["middleware/*"],
+      "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
-      "@utils/*": ["utils/*"],
-      "@internal-types/*": ["types/*"]
+      "@sockets/*": ["sockets/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["src"]

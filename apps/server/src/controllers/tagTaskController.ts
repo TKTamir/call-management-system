@@ -4,6 +4,7 @@ import Task from "@models/task";
 import TagTask from "@models/TagTask";
 import { sequelize } from "@config/database";
 import { createHandler } from "@utils/routeHandler";
+import { socketService } from "@sockets/socket";
 
 // Get all suggested tasks for a specific tag
 // Used when the Admin clicks on a specific tag in the Admin view, used to render linked suggested tasks
@@ -104,10 +105,10 @@ const addSuggestedTaskToTagHandler = async (
     await transaction.commit();
 
     // Socket.io emit for live updates
-    // io.emit('tagSuggestedTaskAdded', {
-    // tagId,
-    // taskId
-    // });
+    socketService.emitTagSuggestedTaskAdded({
+      tagId: Number(tagId),
+      taskId,
+    });
 
     res.status(200).json({
       success: true,
