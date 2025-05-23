@@ -13,7 +13,7 @@ if (!SERVER_URL) {
   console.warn("SERVER_URL is not defined! Falling back to localhost.");
 }
 const baseQuery = fetchBaseQuery({
-  baseUrl: SERVER_URL || "http://localhost:3000/api",
+  baseUrl: `${SERVER_URL}/api` || "http://localhost:3000/api",
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
     const token = state.auth.accessToken;
