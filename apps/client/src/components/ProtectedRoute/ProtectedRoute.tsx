@@ -5,7 +5,7 @@ import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: "admin" | "user";
+  requiredRole?: "admin" | "user" | "both";
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     if (isAuthenticated) {
       refreshUserData();
     }
-  }, [isAuthenticated, refreshUserData]);
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -28,7 +28,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Not authenticated - redirect to login
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   // Check role-based access
