@@ -18,6 +18,7 @@ import {
 import type { Call } from "../types";
 import { useErrorHandler } from "../hooks/useErrorHandler";
 import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import Button from "../components/Button/Button";
 
 const Dashboard: React.FC = () => {
   const {
@@ -225,17 +226,15 @@ const Dashboard: React.FC = () => {
                 }`}
               >
                 <span>{tag.name}</span>
-                <button
+                <Button
+                  buttonText={isTagAddedToCall(tag.id) ? "✓ Added" : "Add"}
                   onClick={() => handleAddTagToCall([tag.id])}
                   disabled={isTagAddedToCall(tag.id) || isAddingTags}
                   className={`px-3 py-1 text-sm border rounded ${
-                    isTagAddedToCall(tag.id)
-                      ? "bg-green-100 text-green-700 cursor-not-allowed"
-                      : "hover:bg-blue-50"
+                    isTagAddedToCall(tag.id) &&
+                    "bg-green-100 text-green-700 cursor-not-allowed"
                   }`}
-                >
-                  {isTagAddedToCall(tag.id) ? "✓ Added" : "Add"}
-                </button>
+                />
               </div>
             ))}
           </div>
@@ -279,17 +278,15 @@ const Dashboard: React.FC = () => {
                   }`}
                 >
                   <SuggestedTaskItem name={task.name} />
-                  <button
+                  <Button
+                    buttonText={isTaskAddedToCall(task.id) ? "✓ Added" : "Add"}
                     onClick={() => handleAddSuggestedTask(task.id)}
                     disabled={isTaskAddedToCall(task.id) || isAddingTask}
                     className={`px-3 py-1 text-sm border rounded ${
-                      isTaskAddedToCall(task.id)
-                        ? "bg-green-100 text-green-700 cursor-not-allowed"
-                        : "hover:bg-blue-50"
+                      isTaskAddedToCall(task.id) &&
+                      "bg-green-100 text-green-700 cursor-not-allowed"
                     }`}
-                  >
-                    {isTaskAddedToCall(task.id) ? "✓ Added" : "Add"}
-                  </button>
+                  />
                 </div>
               ))}
             </div>

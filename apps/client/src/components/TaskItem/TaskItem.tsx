@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useUpdateCallTaskStatusMutation } from "../../store/api";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
+import Button from "../Button/Button";
 
 interface TaskItemProps {
   id: number;
@@ -63,26 +64,23 @@ const TaskItem: React.FC<TaskItemProps> = ({
       <div className="flex justify-between flex-col sm:flex-row sm:items-center gap-2">
         <p>{name}</p>
         <div className="relative">
-          <button
+          <Button
+            buttonText={isLoading ? "Updating..." : taskStatus}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             disabled={isLoading}
-            className={`border rounded-md px-2 py-1 text-xs cursor-pointer hover:opacity-80 disabled:cursor-not-allowed ${getStatusColor(taskStatus)}`}
-          >
-            {isLoading ? "Updating..." : taskStatus}
-          </button>
-
+            className={`border rounded-md px-2 py-1 text-xs  hover:opacity-80 disabled:cursor-not-allowed ${getStatusColor(taskStatus)}`}
+          />
           {isDropdownOpen && (
             <div className="absolute right-0 mt-1 bg-white border rounded-md shadow-lg z-10 min-w-24">
               {statusOptions.map((status) => (
-                <button
+                <Button
                   key={status}
+                  buttonText={status}
                   onClick={() => handleStatusChange(status)}
-                  className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
+                  className={`w-full text-left px-3 text-xs hover:bg-gray-100 ${
                     status === taskStatus ? "bg-gray-50 font-medium" : ""
                   }`}
-                >
-                  {status}
-                </button>
+                />
               ))}
             </div>
           )}

@@ -14,6 +14,7 @@ import Dashboard from "../../pages/Dashboard";
 import AdminDashboard from "../../pages/AdminDashboard";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
+import Button from "../Button/Button";
 
 const AppContent: React.FC = () => {
   const { isAdmin, isAuthenticated, isLoading, refreshUserData, logout, user } =
@@ -102,12 +103,11 @@ const AppContent: React.FC = () => {
               <div className="text-center">
                 <h1>Access Denied</h1>
                 <p>You don't have permission to access this page.</p>
-                <button
+                <Button
+                  buttonText="Login"
                   onClick={handleLoginClick}
-                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Login
-                </button>
+                  className="mt-4 px-4 bg-blue-500 text-white rounded"
+                />
               </div>
             }
           />
