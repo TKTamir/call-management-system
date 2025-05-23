@@ -4,6 +4,7 @@ import Task from "@models/task";
 import CallTask from "@models/CallTask";
 import { sequelize } from "@config/database";
 import { createHandler } from "@utils/routeHandler";
+import { socketService } from "@sockets/socket";
 
 // Get all tasks for a specific call
 // Used in the User view for getting and rendering the existing tasks assigned to a call
@@ -130,10 +131,10 @@ const addTaskToCallHandler = async (
     await transaction.commit();
 
     // Socket.io emit for live updates
-    // io.emit('callTaskAdded', {
-    // callId,
-    // task
-    // });
+    socketService.emitCallTaskAdded({
+      callId: Number(callId),
+      task,
+    });
 
     res.status(201).json({
       success: true,
@@ -181,9 +182,12 @@ const updateCallTaskStatusHandler = async (
   }
 
   // Socket.io emit for live updates
-  // io.emit('callTaskStatusUpdated', {
-  // callId, taskId, taskStatus, callTask
-  // });
+  socketService.emitCallTaskStatusUpdated({
+    callId: Number(callId),
+    taskId: Number(taskId),
+    taskStatus,
+    callTask,
+  });
 
   await callTask.update({ taskStatus });
 
