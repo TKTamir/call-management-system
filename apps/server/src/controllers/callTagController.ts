@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import Call from "@models/call";
-import Tag from "@models/tag";
-import { sequelize } from "@config/database";
-import { createHandler } from "@utils/routeHandler";
-import { socketService } from "@sockets/socket";
+import Call from "../models/call";
+import Tag from "../models/tag";
+import { sequelize } from "../config/database";
+import { createHandler } from "../utils/routeHandler";
+import { socketService } from "../sockets/socket";
 
 // Add tag to call
 // Used by the User in the User view to assign a tag or multiple tags to a call

@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import Call from "@models/call";
-import Task from "@models/task";
-import CallTask from "@models/CallTask";
-import { sequelize } from "@config/database";
-import { createHandler } from "@utils/routeHandler";
-import { socketService } from "@sockets/socket";
+import Call from "../models/call";
+import Task from "../models/task";
+import CallTask from "../models/CallTask";
+import { sequelize } from "../config/database";
+import { createHandler } from "../utils/routeHandler";
+import { socketService } from "../sockets/socket";
 
 // Get all tasks for a specific call
 // Used in the User view for getting and rendering the existing tasks assigned to a call

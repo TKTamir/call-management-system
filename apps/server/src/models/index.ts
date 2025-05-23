@@ -1,10 +1,10 @@
-import { sequelize } from "@config/database";
+import { sequelize } from "../config/database";
 import Tag from "./tag";
 import Call from "./call";
 import Task from "./task";
-import CallTag from "@models/CallTag";
-import CallTask from "@models/CallTask";
-import TagTask from "@models/TagTask";
+import CallTag from "../models/CallTag";
+import CallTask from "../models/CallTask";
+import TagTask from "../models/TagTask";
 
 const initializeModels = (): void => {
   // Call <-> Task (Many-to-Many through CallTask)

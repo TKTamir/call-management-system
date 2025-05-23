@@ -4,8 +4,8 @@ import {
   register,
   refreshToken,
   getCurrentUser,
-} from "@controllers/authController";
-import { authenticate, requireAdmin } from "@middleware/authMiddleware";
+} from "../controllers/authController";
+import { authenticate, requireAdmin } from "../middleware/authMiddleware";
 
 const router = Router();
 

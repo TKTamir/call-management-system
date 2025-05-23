@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import Tag from "@models/tag";
-import Task from "@models/task";
-import TagTask from "@models/TagTask";
-import { sequelize } from "@config/database";
-import { createHandler } from "@utils/routeHandler";
-import { socketService } from "@sockets/socket";
+import Tag from "../models/tag";
+import Task from "../models/task";
+import TagTask from "../models/TagTask";
+import { sequelize } from "../config/database";
+import { createHandler } from "../utils/routeHandler";
+import { socketService } from "../sockets/socket";
 
 // Get all suggested tasks for a specific tag
 // Used when the Admin clicks on a specific tag in the Admin view, used to render linked suggested tasks

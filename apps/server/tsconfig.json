@@ -7,16 +7,6 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./src",
-    "paths": {
-      "@controllers/*": ["controllers/*"],
-      "@config/*": ["config/*"],
-      "@internal-types/*": ["types/*"],
-      "@middleware/*": ["middleware/*"],
-      "@models/*": ["models/*"],
-      "@routes/*": ["routes/*"],
-      "@sockets/*": ["sockets/*"],
-      "@utils/*": ["utils/*"]
-    }
   },
   "include": ["src"]
 }

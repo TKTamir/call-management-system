@@ -1,9 +1,6 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "@config/database";
-import {
-  type TaskAttributes,
-  type TaskInput,
-} from "@internal-types/models/task";
+import { sequelize } from "../config/database";
+import { type TaskAttributes, type TaskInput } from "../types/models/task";
 
 class Task extends Model<TaskAttributes, TaskInput> implements TaskAttributes {
   declare id: number;

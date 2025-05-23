@@ -1,9 +1,9 @@
 import { Server as SocketIOServer } from "socket.io";
 import { Server as HTTPServer } from "http";
-import { TagAttributes } from "@internal-types/models/tag";
-import { TaskAttributes } from "@internal-types/models/task";
-import { CallAttributes } from "@internal-types/models/call";
-import { CallTaskAttributes } from "@internal-types/models/call-task";
+import { TagAttributes } from "../types/models/tag";
+import { TaskAttributes } from "../types/models/task";
+import { CallAttributes } from "../types/models/call";
+import { CallTaskAttributes } from "../types/models/call-task";
 
 interface ServerToClientEvents {
   // Tag events
@@ -34,11 +34,11 @@ interface ClientToServerEvents {
   // Currently no client-to-server events needed
 }
 
-interface InterServerEvents {
+export interface InterServerEvents {
   // No inter-server events needed
 }
 
-interface SocketData {
+export interface SocketData {
   // Currently no per-socket data needed
 }
 

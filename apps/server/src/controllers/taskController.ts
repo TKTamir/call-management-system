@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import Task from "@models/task";
-import { createHandler } from "@utils/routeHandler";
-import { socketService } from "@sockets/socket";
+import Task from "../models/task";
+import { createHandler } from "../utils/routeHandler";
+import { socketService } from "../sockets/socket";
 
 // Get all tasks
 // Used for development purposes
