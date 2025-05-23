@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getAllTagTaskAssociations } from "@controllers/tagTaskController";
-import { requireAdmin } from "@middleware/authMiddleware";
+import { getAllTagTaskAssociations } from "../controllers/tagTaskController";
+import { requireAdmin } from "../middleware/authMiddleware";
 
 const router = Router();
 

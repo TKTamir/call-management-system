@@ -5,9 +5,9 @@ import {
   getSuggestedTasks,
   createSuggestedTask,
   updateSuggestedTask,
-} from "@controllers/taskController";
-import { getSuggestedTasksForTags } from "@controllers/tagTaskController";
-import { authenticate, requireAdmin } from "@middleware/authMiddleware";
+} from "../controllers/taskController";
+import { getSuggestedTasksForTags } from "../controllers/tagTaskController";
+import { authenticate, requireAdmin } from "../middleware/authMiddleware";
 
 const router = Router();
 

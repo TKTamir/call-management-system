@@ -4,12 +4,12 @@ import {
   getTagById,
   createTag,
   updateTag,
-} from "@controllers/tagController";
+} from "../controllers/tagController";
 import {
   getTagSuggestedTasks,
   addSuggestedTaskToTag,
-} from "@controllers/tagTaskController";
-import { authenticate, requireAdmin } from "@middleware/authMiddleware";
+} from "../controllers/tagTaskController";
+import { authenticate, requireAdmin } from "../middleware/authMiddleware";
 
 const router = Router();
 

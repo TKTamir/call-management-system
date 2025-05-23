@@ -3,14 +3,14 @@ import {
   getAllCalls,
   getCallById,
   createCall,
-} from "@controllers/callController";
-import { addTagsToCall, getCallTags } from "@controllers/callTagController";
+} from "../controllers/callController";
+import { addTagsToCall, getCallTags } from "../controllers/callTagController";
 import {
   getCallTasks,
   addTaskToCall,
   updateCallTaskStatus,
-} from "@controllers/callTaskController";
-import { authenticate } from "@middleware/authMiddleware";
+} from "../controllers/callTaskController";
+import { authenticate } from "../middleware/authMiddleware";
 
 const router = Router();
 
