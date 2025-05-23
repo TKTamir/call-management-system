@@ -1,4 +1,5 @@
-//TODO: Install React-router and implement Routes
+import React from "react";
+
 const AppContent: React.FC = () => {
   return (
     <></>
