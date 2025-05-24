@@ -13,8 +13,7 @@
     "server:build": "cd apps/server && npm run build",
     "build": "npm run client:build && npm run server:build",
     "lint": "npm run client:lint && npm run server:lint",
-    "format": "npm run client:format && npm run server:format",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "npm run client:format && npm run server:format"
   },
   "author": "Tamir Kahalany",
   "license": "ISC",
