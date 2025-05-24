@@ -29,48 +29,39 @@ const List: React.FC<ListProps> = ({
     <>
       {variant === "tags" ? (
         <>
-          <h2 className="text-xl font-medium mb-4">Tags</h2>
-          <div className="flex flex-col flex-grow overflow-auto space-y-2 border rounded-lg p-4">
+          <div className="flex flex-grow flex-col space-y-2 overflow-auto rounded-lg bg-gray-50 p-4 shadow-sm">
             {tags?.map((tag) => (
               <Button
                 key={tag.id}
                 onClick={() => onTagClick?.(tag)}
-                children={
-                  <TagItem
-                    className="p-3"
-                    name={tag.name}
-                    highlightIcon={highlightIcon}
-                  />
-                }
-              />
+                className="w-full rounded-lg bg-white p-4 text-left shadow-sm transition-all hover:bg-blue-50 hover:shadow-md active:bg-blue-100"
+              >
+                <TagItem name={tag.name} highlightIcon={highlightIcon} />
+              </Button>
             ))}
             {tags?.length === 0 && (
-              <p className="text-gray-500 text-center py-4">
-                No tags available.
-              </p>
+              <div className="flex h-32 items-center justify-center">
+                <p className="text-gray-500">No tags available.</p>
+              </div>
             )}
           </div>
         </>
       ) : (
         <>
-          <h2 className="text-xl font-medium mb-4">Suggested Tasks</h2>
-          <div className="flex flex-col flex-grow overflow-auto space-y-2 border rounded-lg p-4">
+          <div className="flex flex-grow flex-col space-y-2 overflow-auto rounded-lg bg-gray-50 p-4 shadow-sm">
             {suggestedTasks?.map((suggestedTask) => (
               <Button
                 key={suggestedTask.id}
                 onClick={() => {}}
-                children={
-                  <SuggestedTaskItem
-                    className="p-3"
-                    name={suggestedTask.name}
-                  />
-                }
-              />
+                className="w-full rounded-lg bg-white p-4 text-left shadow-sm transition-all hover:bg-blue-50 hover:shadow-md active:bg-blue-100"
+              >
+                <SuggestedTaskItem name={suggestedTask.name} />
+              </Button>
             ))}
             {suggestedTasks?.length === 0 && (
-              <p className="text-gray-500 text-center py-4">
-                No suggested tasks available.
-              </p>
+              <div className="flex h-32 items-center justify-center">
+                <p className="text-gray-500">No suggested tasks available.</p>
+              </div>
             )}
           </div>
         </>
