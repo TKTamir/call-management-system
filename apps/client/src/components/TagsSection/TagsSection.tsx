@@ -10,20 +10,20 @@ interface TagsSectionProps {
 
 const TagsSection: React.FC<TagsSectionProps> = ({ tags, setShowTagModal }) => {
   return (
-    <div className="mb-4">
-      <div className="flex flex-wrap items-center p-3 border rounded-lg gap-2">
-        <h4 className="text-sm font-medium mr-2">Tags</h4>
+    <div className="mb-6">
+      <div className="flex flex-wrap items-center gap-2 rounded-lg bg-gray-50 p-4 shadow-sm">
+        <h4 className="mr-2 text-sm font-semibold text-gray-700">Tags</h4>
         {tags.map((tag) => (
           <TagItem
             key={tag.id}
             name={tag.name}
-            className="border rounded-md px-3 py-1 text-sm"
+            className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700"
           />
         ))}
         <Button
           buttonText="+"
           onClick={() => setShowTagModal(true)}
-          className="border-0 text-lg"
+          className="rounded-full bg-white px-3 py-1 text-lg font-medium text-blue-600 shadow-sm hover:bg-blue-50 hover:shadow-md"
         />
       </div>
     </div>
