@@ -53,7 +53,7 @@ class SocketService {
   public initialize(server: HTTPServer): void {
     this.io = new SocketIOServer(server, {
       cors: {
-        origin: "http://d39twl30is0v0r.cloudfront.net",
+        origin: "https://d39twl30is0v0r.cloudfront.net",
         methods: ["GET", "POST"],
         credentials: true,
       },
