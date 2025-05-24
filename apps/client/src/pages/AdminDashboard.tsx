@@ -6,6 +6,7 @@ import Button from "../components/Button/Button";
 import List from "../components/List/List";
 import Modal from "../components/Modal/Modal";
 import SuggestedTaskItem from "../components/SuggestedTask/SuggestedTaskItem";
+import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 import {
   useGetAllTagsQuery,
   useGetSuggestedTasksQuery,
@@ -16,7 +17,6 @@ import {
   useUpdateTagMutation,
 } from "../store/api";
 import { useErrorHandler } from "../hooks/useErrorHandler";
-import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 
 const AdminDashboard: React.FC = () => {
   // RTK Query hooks
@@ -84,6 +84,7 @@ const AdminDashboard: React.FC = () => {
     if (newTagName.trim()) {
       try {
         await createTag({ name: newTagName.trim() }).unwrap();
+        toast.success("Tag created successfully!");
         setNewTagName("");
       } catch (error) {
         console.error("Failed to create tag:", error);
@@ -97,6 +98,7 @@ const AdminDashboard: React.FC = () => {
         await createSuggestedTask({
           name: newSuggestedTaskName.trim(),
         }).unwrap();
+        toast.success("Task created successfully!");
         setNewSuggestedTaskName("");
       } catch (error) {
         console.error("Failed to create suggested task:", error);
@@ -144,6 +146,7 @@ const AdminDashboard: React.FC = () => {
         tagId: selectedTagForLinking.id,
         taskId,
       }).unwrap();
+      toast.success("Task linked to tag successfully!");
     } catch (error) {
       console.error("Failed to link task to tag:", error);
     }
@@ -152,7 +155,7 @@ const AdminDashboard: React.FC = () => {
   const handleCloseModal = () => {
     setShowLinkTasksModal(false);
     setSelectedTagForLinking(null);
-    setEditingTagName(""); // ADD this line
+    setEditingTagName("");
   };
 
   // Check if task is already linked
@@ -167,24 +170,32 @@ const AdminDashboard: React.FC = () => {
   return (
     <>
       <Container>
-        <div className="flex justify-end items-center gap-4">
+        <div className="mb-4 flex items-center justify-end gap-2">
           <Button
             buttonText="Tags"
             onClick={handleTagsClick}
-            className={`px-4 ${activeView === "tags" ? "bg-gray-100" : ""}`}
+            className={`px-4 py-2 font-medium transition-all ${
+              activeView === "tags"
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
           />
           <Button
             buttonText="Tasks"
             onClick={handleSuggestedTasksClick}
-            className={`px-4 ${activeView === "suggestedTasks" ? "bg-gray-100" : ""}`}
+            className={`px-4 py-2 font-medium transition-all ${
+              activeView === "suggestedTasks"
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
           />
         </div>
 
-        <h2 className="text-xl font-medium mb-4">
+        <h2 className="mb-6 text-2xl font-bold text-gray-900">
           {activeView === "tags" ? "Tags" : "Suggested Tasks"}
         </h2>
 
-        <div className="flex mb-6">
+        <div className="mb-6 flex gap-2">
           <Input
             value={activeView === "tags" ? newTagName : newSuggestedTaskName}
             onChange={(e) =>
@@ -193,7 +204,7 @@ const AdminDashboard: React.FC = () => {
                 : setNewSuggestedTaskName(e.target.value)
             }
             placeholder={activeView === "tags" ? "Tag name" : "Task name"}
-            className="mr-2 flex-grow min-w-0"
+            className="min-w-0 flex-grow"
           />
           <Button
             onClick={
@@ -209,7 +220,7 @@ const AdminDashboard: React.FC = () => {
                   : "Add Task"
             }
             disabled={activeView === "tags" ? isCreatingTag : isCreatingTask}
-            className="px-4"
+            className="bg-blue-600 px-6 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800"
           />
         </div>
 
@@ -233,14 +244,14 @@ const AdminDashboard: React.FC = () => {
         submitButtonText=""
       >
         <div className="space-y-6">
-          <div className="border-b pb-4">
-            <h4 className="font-medium mb-3">Edit Tag Name:</h4>
+          <div className="border-b border-gray-200 pb-6">
+            <h4 className="mb-3 font-semibold text-gray-900">Edit Tag Name:</h4>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={editingTagName}
                 onChange={(e) => setEditingTagName(e.target.value)}
-                className="flex-1 border rounded-md px-3 py-2"
+                className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-20 disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="Tag name"
                 disabled={isUpdatingTag}
               />
@@ -252,40 +263,44 @@ const AdminDashboard: React.FC = () => {
                   !editingTagName.trim() ||
                   editingTagName.trim() === selectedTagForLinking?.name
                 }
-                className="px-4 bg-blue-50 hover:bg-blue-100"
+                className="bg-blue-600 px-4 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300"
               />
             </div>
           </div>
 
-          <h4 className="font-medium mb-3">Link Suggested Tasks:</h4>
-          <div className="max-h-64 overflow-y-auto space-y-2">
-            {suggestedTasks.map((task) => (
-              <div
-                key={task.id}
-                className={`border rounded-md p-3 flex justify-between items-center ${
-                  isTaskLinked(task.id) ? "bg-green-50 border-green-200" : ""
-                }`}
-              >
-                <SuggestedTaskItem name={task.name} />
-                <Button
-                  buttonText={isTaskLinked(task.id) ? "✓ Linked" : "Link"}
-                  onClick={() => handleLinkTaskToTag(task.id)}
-                  disabled={isTaskLinked(task.id) || isLinkingTask}
-                  className={`px-3 py-1 text-sm ${
+          <div>
+            <h4 className="mb-3 font-semibold text-gray-900">Link Suggested Tasks:</h4>
+            <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg bg-gray-50 p-3">
+              {suggestedTasks.map((task) => (
+                <div
+                  key={task.id}
+                  className={`flex items-center justify-between rounded-md p-3 transition-all ${
                     isTaskLinked(task.id)
-                      ? "bg-green-100 text-green-700 cursor-not-allowed"
-                      : "hover:bg-blue-50"
+                      ? "bg-green-50 shadow-sm"
+                      : "bg-white shadow-sm hover:shadow-md"
                   }`}
-                />
-              </div>
-            ))}
-          </div>
+                >
+                  <SuggestedTaskItem name={task.name} />
+                  <Button
+                    buttonText={isTaskLinked(task.id) ? "✓ Linked" : "Link"}
+                    onClick={() => handleLinkTaskToTag(task.id)}
+                    disabled={isTaskLinked(task.id) || isLinkingTask}
+                    className={`px-3 py-1 text-sm font-medium ${
+                      isTaskLinked(task.id)
+                        ? "cursor-not-allowed bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                    }`}
+                  />
+                </div>
+              ))}
+            </div>
 
-          {suggestedTasks.length === 0 && (
-            <p className="text-gray-500 text-center py-4">
-              No suggested tasks available. Create some tasks first.
-            </p>
-          )}
+            {suggestedTasks.length === 0 && (
+              <div className="rounded-lg bg-gray-50 p-8 text-center">
+                <p className="text-gray-500">No suggested tasks available. Create some tasks first.</p>
+              </div>
+            )}
+          </div>
         </div>
       </Modal>
     </>

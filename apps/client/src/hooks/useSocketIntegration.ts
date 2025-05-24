@@ -2,9 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSocket } from "./useSocket";
 import { api } from "../store/api";
-import type { Tag, Task, Call, CallTask } from "../types";
-
-//TODO: Remove Console.logs
+import type { Task, CallTask } from "../types";
 
 // Hook that integrates Socket.IO events with RTK Query cache updates
 // This ensures real-time updates are reflected in the UI automatically
@@ -15,25 +13,17 @@ export const useSocketIntegration = () => {
   useEffect(() => {
     if (!socket || !isConnected) return;
 
-    console.log("🔄 Setting up Socket.IO + RTK Query integration...");
-
     // TAG EVENTS
-    const handleTagCreated = (tag: Tag) => {
-      console.log("🏷️ Tag created via socket:", tag);
-
+    const handleTagCreated = () => {
       dispatch(api.util.invalidateTags([{ type: "Tag", id: "LIST" }]));
     };
 
-    const handleTagUpdated = (tag: Tag) => {
-      console.log("🏷️ Tag updated via socket:", tag);
-
+    const handleTagUpdated = () => {
       dispatch(api.util.invalidateTags(["Tag", "CallTag", "Call"]));
     };
 
     // TASK EVENTS
-    const handleTaskCreated = (task: Task) => {
-      console.log("📋 Task created via socket:", task);
-
+    const handleTaskCreated = () => {
       dispatch(
         api.util.invalidateTags([
           { type: "Task", id: "LIST" },
@@ -43,22 +33,18 @@ export const useSocketIntegration = () => {
     };
 
     const handleTaskUpdated = (task: Task) => {
-      console.log("📋 Task updated via socket:", task);
-
       dispatch(
         api.util.invalidateTags([
           { type: "Task", id: "LIST" },
           { type: "Task", id: task.id },
           { type: "SuggestedTask", id: "LIST" },
-          { type: "CallTask", id: "LIST" }, // Task names might be shown
+          { type: "CallTask", id: "LIST" },
         ]),
       );
     };
 
     // CALL EVENTS
-    const handleCallCreated = (call: Call) => {
-      console.log("📞 Call created via socket:", call);
-
+    const handleCallCreated = () => {
       dispatch(api.util.invalidateTags([{ type: "Call", id: "LIST" }]));
     };
 
@@ -66,8 +52,6 @@ export const useSocketIntegration = () => {
       callId: number;
       tagIds: number[];
     }) => {
-      console.log("📞🏷️ Call tags added via socket:", data);
-
       // Invalidate the specific call's tags cache
       dispatch(api.util.invalidateTags([{ type: "CallTag", id: data.callId }]));
 
@@ -76,8 +60,6 @@ export const useSocketIntegration = () => {
     };
 
     const handleCallTaskAdded = (data: { callId: number; task: Task }) => {
-      console.log("📞📋 Call task added via socket:", data);
-
       // Invalidate the specific call's tasks cache
       dispatch(
         api.util.invalidateTags([{ type: "CallTask", id: data.callId }]),
@@ -93,8 +75,6 @@ export const useSocketIntegration = () => {
       taskStatus: "Open" | "In Progress" | "Completed";
       callTask: CallTask;
     }) => {
-      console.log("📞📋 Call task status updated via socket:", data);
-
       dispatch(
         api.util.invalidateTags([
           { type: "CallTask", id: data.callId },
@@ -108,8 +88,6 @@ export const useSocketIntegration = () => {
       tagId: number;
       taskId: number;
     }) => {
-      console.log("🏷️📋 Tag suggested task added via socket:", data);
-
       // Invalidate tag-task associations
       dispatch(
         api.util.invalidateTags([
@@ -132,11 +110,8 @@ export const useSocketIntegration = () => {
     socket.on("callTaskStatusUpdated", handleCallTaskStatusUpdated);
     socket.on("tagSuggestedTaskAdded", handleTagSuggestedTaskAdded);
 
-    console.log("✅ Socket.IO + RTK Query integration active");
-
     // Cleanup function
     return () => {
-      console.log("🧹 Cleaning up Socket.IO + RTK Query integration...");
       socket.off("tagCreated", handleTagCreated);
       socket.off("tagUpdated", handleTagUpdated);
       socket.off("taskCreated", handleTaskCreated);

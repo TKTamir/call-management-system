@@ -4,7 +4,6 @@ import { type SerializedError } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "../utils/errorHandler";
 
-// TODO: Implement in Components that use RTK Query Hooks
 // Error handler for UI
 export const useErrorHandler = (
   error: FetchBaseQueryError | SerializedError | undefined,

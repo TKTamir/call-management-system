@@ -22,13 +22,13 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
 
   const handleLogin = async () => {
     if (!username.trim() || !password.trim()) {
-      toast("Username and password are required");
+      toast.error("Username and password are required");
       return;
     }
 
     try {
       await login({ username, password });
-
+      toast.success("Successfully logged in!");
       onClose();
       setUsername("");
       setPassword("");
@@ -47,7 +47,7 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      name="Sign in"
+      name="Sign in to Cytactic"
       inputValue={username}
       onInputChange={(e: ChangeEvent<HTMLInputElement>) =>
         setUsername(e.target.value)
@@ -57,7 +57,10 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     >
       <div className="space-y-4">
         <div>
-          <label htmlFor="username" className="block text-sm font-medium mb-1">
+          <label
+            htmlFor="username"
+            className="mb-1 block text-sm font-medium text-gray-700"
+          >
             Username
           </label>
           <input
@@ -67,13 +70,16 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
             onChange={(e) => setUsername(e.target.value)}
             onKeyDown={handleKeyPress}
             disabled={isLoading}
-            className="w-full border rounded-md px-3 py-2 disabled:opacity-50"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-20 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="Enter your username"
           />
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
+          <label
+            htmlFor="password"
+            className="mb-1 block text-sm font-medium text-gray-700"
+          >
             Password
           </label>
           <input
@@ -83,16 +89,16 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyPress}
             disabled={isLoading}
-            className="w-full border rounded-md px-3 py-2 disabled:opacity-50"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-20 disabled:cursor-not-allowed disabled:opacity-50"
             placeholder="Enter your password"
           />
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end pt-2">
           <Button
             buttonText={isLoading ? "Signing in..." : "Sign in"}
             onClick={handleLogin}
-            className="px-4"
+            className="bg-blue-600 px-6 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800"
             disabled={isLoading}
           />
         </div>

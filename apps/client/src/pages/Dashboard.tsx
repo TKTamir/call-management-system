@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import Modal from "../components/Modal/Modal";
 import Sidebar from "../components/Sidebar/Sidebar";
 import MainContent from "../components/MainContent/MainContent";
 import DetailContent from "../components/DetailContent/DetailContent";
 import Container from "../components/Container/Container";
 import SuggestedTaskItem from "../components/SuggestedTask/SuggestedTaskItem";
+import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
+import Button from "../components/Button/Button";
 import {
   useGetAllCallsQuery,
   useGetAllTagsQuery,
@@ -17,7 +20,6 @@ import {
 } from "../store/api";
 import type { Call } from "../types";
 import { useErrorHandler } from "../hooks/useErrorHandler";
-import LoadingSpinner from "../components/LoadingSpinner/LoadingSpinner";
 
 const Dashboard: React.FC = () => {
   const {
@@ -41,13 +43,13 @@ const Dashboard: React.FC = () => {
   useErrorHandler(tagsError);
   useErrorHandler(createCallError);
 
-  // ✅ Local state
+  // Local state
   const [view, setView] = useState<string>("main");
   const [selectedCall, setSelectedCall] = useState<Call | undefined>(undefined);
   const [newCallName, setNewCallName] = useState("");
   const [newTaskName, setNewTaskName] = useState("");
 
-  // ✅ Modal states
+  // Modal states
   const [showCallModal, setShowCallModal] = useState(false);
   const [showTagModal, setShowTagModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -79,6 +81,7 @@ const Dashboard: React.FC = () => {
     if (newCallName.trim()) {
       try {
         await createCall({ name: newCallName.trim() }).unwrap();
+        toast.success("Call created successfully!");
         setNewCallName("");
         setShowCallModal(false);
       } catch (error) {
@@ -96,6 +99,7 @@ const Dashboard: React.FC = () => {
         callId: selectedCall.id,
         data: { tagIds },
       }).unwrap();
+      toast.success("Tag added to call successfully!");
       setShowTagModal(false);
     } catch (error) {
       console.error("Failed to add tags to call:", error);
@@ -114,6 +118,7 @@ const Dashboard: React.FC = () => {
           taskStatus: "Open",
         },
       }).unwrap();
+      toast.success("Task added successfully!");
       setNewTaskName("");
       setShowTaskModal(false);
     } catch (error) {
@@ -133,6 +138,7 @@ const Dashboard: React.FC = () => {
           taskStatus: "Open",
         },
       }).unwrap();
+      toast.success("Suggested task added successfully!");
     } catch (error) {
       console.error("Failed to add suggested task to call:", error);
     }
@@ -154,7 +160,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 h-full">
+      <div className="flex h-full flex-col gap-4 sm:flex-row sm:gap-6">
         <Sidebar
           calls={calls}
           selectedCall={selectedCall}
@@ -215,33 +221,36 @@ const Dashboard: React.FC = () => {
         submitButtonText=""
       >
         <div className="space-y-4">
-          <h4 className="font-medium">Available Tags:</h4>
-          <div className="max-h-64 overflow-y-auto space-y-2">
+          <h4 className="font-semibold text-gray-900">Available Tags:</h4>
+          <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg bg-gray-50 p-3">
             {allTags.map((tag) => (
               <div
                 key={tag.id}
-                className={`border rounded-md p-3 flex justify-between items-center ${
-                  isTagAddedToCall(tag.id) ? "bg-green-50 border-green-200" : ""
+                className={`flex items-center justify-between rounded-md p-3 transition-all ${
+                  isTagAddedToCall(tag.id)
+                    ? "bg-green-50 shadow-sm"
+                    : "bg-white shadow-sm hover:shadow-md"
                 }`}
               >
-                <span>{tag.name}</span>
-                <button
+                <span className="font-medium text-gray-700">{tag.name}</span>
+                <Button
+                  buttonText={isTagAddedToCall(tag.id) ? "✓ Added" : "Add"}
                   onClick={() => handleAddTagToCall([tag.id])}
                   disabled={isTagAddedToCall(tag.id) || isAddingTags}
-                  className={`px-3 py-1 text-sm border rounded ${
+                  className={`px-3 py-1 text-sm font-medium ${
                     isTagAddedToCall(tag.id)
-                      ? "bg-green-100 text-green-700 cursor-not-allowed"
-                      : "hover:bg-blue-50"
+                      ? "cursor-not-allowed bg-green-100 text-green-700"
+                      : "bg-blue-100 text-blue-700 hover:bg-blue-200"
                   }`}
-                >
-                  {isTagAddedToCall(tag.id) ? "✓ Added" : "Add"}
-                </button>
+                />
               </div>
             ))}
           </div>
 
           {allTags.length === 0 && (
-            <p className="text-gray-500 text-center py-4">No tags available.</p>
+            <div className="rounded-lg bg-gray-50 p-8 text-center">
+              <p className="text-gray-500">No tags available.</p>
+            </div>
           )}
         </div>
       </Modal>
@@ -257,39 +266,44 @@ const Dashboard: React.FC = () => {
         submitButtonText=""
       >
         <div className="space-y-4">
-          <h4 className="font-medium">Suggested Tasks for this call's tags:</h4>
+          <h4 className="font-semibold text-gray-900">
+            Suggested Tasks for this call's tags:
+          </h4>
 
           {callTags.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">
-              Add tags to this call first to see suggested tasks.
-            </p>
+            <div className="rounded-lg bg-gray-50 p-8 text-center">
+              <p className="text-gray-500">
+                Add tags to this call first to see suggested tasks.
+              </p>
+            </div>
           ) : suggestedTasks.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">
-              No suggested tasks available for the selected tags.
-            </p>
+            <div className="rounded-lg bg-gray-50 p-8 text-center">
+              <p className="text-gray-500">
+                No suggested tasks available for the selected tags.
+              </p>
+            </div>
           ) : (
-            <div className="max-h-64 overflow-y-auto space-y-2">
+            <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg bg-gray-50 p-3">
               {suggestedTasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`border rounded-md p-3 flex justify-between items-center ${
+                  className={`flex items-center justify-between rounded-md p-3 transition-all ${
                     isTaskAddedToCall(task.id)
-                      ? "bg-green-50 border-green-200"
-                      : ""
+                      ? "bg-green-50 shadow-sm"
+                      : "bg-white shadow-sm hover:shadow-md"
                   }`}
                 >
                   <SuggestedTaskItem name={task.name} />
-                  <button
+                  <Button
+                    buttonText={isTaskAddedToCall(task.id) ? "✓ Added" : "Add"}
                     onClick={() => handleAddSuggestedTask(task.id)}
                     disabled={isTaskAddedToCall(task.id) || isAddingTask}
-                    className={`px-3 py-1 text-sm border rounded ${
+                    className={`px-3 py-1 text-sm font-medium ${
                       isTaskAddedToCall(task.id)
-                        ? "bg-green-100 text-green-700 cursor-not-allowed"
-                        : "hover:bg-blue-50"
+                        ? "cursor-not-allowed bg-green-100 text-green-700"
+                        : "bg-blue-100 text-blue-700 hover:bg-blue-200"
                     }`}
-                  >
-                    {isTaskAddedToCall(task.id) ? "✓ Added" : "Add"}
-                  </button>
+                  />
                 </div>
               ))}
             </div>
