@@ -22,29 +22,29 @@ const Sidebar: React.FC<SidebarProps> = ({
   isCreatingCall,
 }) => {
   return (
-    <div className="flex flex-col w-full h-full sm:w-1/3 sm:h-auto overflow-y-auto border rounded-lg p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium">Calls</h2>
+    <div className="flex h-full w-full flex-col overflow-hidden rounded-lg bg-gray-50 p-4 shadow-sm sm:h-auto sm:w-1/3">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-gray-900">Calls</h2>
         <Button
           buttonText={isCreatingCall ? "Creating..." : "New"}
           onClick={() => setShowCallModal(true)}
           disabled={isCreatingCall}
-          className="px-4"
+          className="bg-blue-600 px-4 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800"
         />
       </div>
 
-      <div className="space-y-2 flex-grow">
+      <div className="flex-grow space-y-2 overflow-y-auto">
         {calls.length === 0 ? (
-          <p className="text-gray-500 text-center py-4">No calls available.</p>
+          <p className="py-8 text-center text-gray-500">No calls available.</p>
         ) : (
           calls.map((call) => (
             <Button
               key={call.id}
               onClick={() => handleSelectCall(call)}
-              className={`w-full border rounded-md px-4 py-4 cursor-pointer text-left ${
+              className={`w-full rounded-lg px-4 py-3 text-left transition-all ${
                 selectedCall?.id === call.id
-                  ? "bg-gray-200"
-                  : "hover:bg-gray-200"
+                  ? "bg-blue-600 text-white shadow-md hover:bg-blue-700"
+                  : "bg-white text-gray-700 shadow-sm hover:bg-gray-50 hover:shadow-md"
               }`}
             >
               {call.name}
