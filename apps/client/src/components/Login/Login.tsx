@@ -21,19 +21,26 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
   useErrorHandler(error);
 
   const handleLogin = async () => {
-    if (!username.trim() || !password.trim()) {
-      toast.error("Username and password are required");
+    if (!username.trim()) {
+      toast.error("Username is required");
+      return;
+    }
+
+    if (!password.trim()) {
+      toast.error("Password is required");
       return;
     }
 
     try {
-      await login({ username, password });
+      const lowercaseUsername = username.trim().toLowerCase();
+      await login({ username: lowercaseUsername, password });
       toast.success("Successfully logged in!");
       onClose();
       setUsername("");
       setPassword("");
     } catch (error) {
       console.error("Login failed:", error);
+      toast.error("Invalid credentials");
     }
   };
 
