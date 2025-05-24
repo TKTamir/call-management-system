@@ -24,16 +24,18 @@ const DetailContent: React.FC<DetailContentProps> = ({
 }) => {
   if (!selectedCall) {
     return (
-      <div className="border rounded-lg p-4 w-full sm:w-2/3 h-full flex items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center rounded-lg bg-gray-50 p-4 shadow-sm sm:w-2/3">
         <p className="text-gray-500">Select a call to view details</p>
       </div>
     );
   }
 
   return (
-    <div className="border rounded-lg p-4 w-full sm:w-2/3 h-full overflow-auto">
-      <div className="h-full flex flex-col">
-        <h3 className="text-lg font-medium mb-2">{selectedCall.name}</h3>
+    <div className="h-full w-full overflow-auto rounded-lg bg-white p-6 shadow-sm sm:w-2/3">
+      <div className="flex h-full flex-col">
+        <h3 className="mb-4 text-xl font-semibold text-gray-900">
+          {selectedCall.name}
+        </h3>
         <TagsSection tags={tags} setShowTagModal={setShowTagModal} />
         <TasksSection
           callId={selectedCall.id}
