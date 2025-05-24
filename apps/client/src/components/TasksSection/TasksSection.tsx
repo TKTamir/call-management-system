@@ -50,7 +50,7 @@ const TasksSection: React.FC<TasksSectionProps> = ({
         </div>
       </div>
 
-      <div className="max-h-96 overflow-y-auto">
+      <div className="min-h-[30dvh] max-h-96 overflow-y-auto">
         {tasks.length === 0 ? (
           <div className="flex h-32 items-center justify-center">
             <p className="text-gray-500">No tasks assigned to this call.</p>
