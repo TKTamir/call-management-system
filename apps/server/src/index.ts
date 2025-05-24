@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Initialize Socket.io
 socketService.initialize(server);
@@ -59,7 +59,7 @@ const startServer = async (): Promise<void> => {
 
     await syncDatabase(false);
 
-    server.listen(PORT, () => {
+    server.listen(PORT, "0.0.0.0", () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
