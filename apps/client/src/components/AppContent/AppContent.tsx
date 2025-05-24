@@ -59,7 +59,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex min-h-screen flex-col bg-gradient-to-br from-gray-50 to-gray-100">
       <Navbar
         isLoggedIn={isAuthenticated}
         isAdmin={isAdmin}
@@ -68,7 +68,7 @@ const AppContent: React.FC = () => {
         currentPath={location.pathname}
       />
       <Login isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-      <div className="flex flex-grow items-center justify-center mt-16">
+      <div className="mt-12 sm:mt-16 flex flex-grow items-center justify-center p-4">
         <Routes>
           <Route
             path="/"
@@ -100,13 +100,32 @@ const AppContent: React.FC = () => {
           <Route
             path="/unauthorized"
             element={
-              <div className="text-center">
-                <h1>Access Denied</h1>
-                <p>You don't have permission to access this page.</p>
+              <div className="rounded-xl bg-white p-8 text-center shadow-lg">
+                <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+                  <svg
+                    className="h-8 w-8 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                    />
+                  </svg>
+                </div>
+                <h1 className="mb-2 text-2xl font-bold text-gray-900">
+                  Access Denied
+                </h1>
+                <p className="mb-6 text-gray-600">
+                  You don't have permission to access this page.
+                </p>
                 <Button
-                  buttonText="Login"
+                  buttonText="Sign In"
                   onClick={handleLoginClick}
-                  className="mt-4 px-4 bg-blue-500 text-white rounded"
+                  className="bg-blue-600 px-6 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800"
                 />
               </div>
             }
