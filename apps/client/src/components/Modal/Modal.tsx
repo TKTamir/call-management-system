@@ -35,14 +35,29 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-opacity-30 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white border rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">{name}</h3>
-          <Button onClick={onClose} className=" cursor-pointer">
-            X
+      <div className="w-full max-w-md transform rounded-lg bg-white p-6 shadow-xl transition-all">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+          <Button
+            onClick={onClose}
+            className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
           </Button>
         </div>
         {children ? (
@@ -52,13 +67,13 @@ const Modal: React.FC<ModalProps> = ({
             <Input
               value={inputValue}
               onChange={onInputChange}
-              className="w-full mb-4"
+              className="mb-4 w-full"
             />
             <div className="flex justify-end">
               <Button
                 buttonText={submitButtonText}
                 onClick={onSubmit}
-                className="px-4"
+                className="bg-blue-600 px-4 text-white hover:bg-blue-700 active:bg-blue-800"
               />
             </div>
           </>
