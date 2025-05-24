@@ -23,7 +23,7 @@ socketService.initialize(server);
 
 app.use(
   cors({
-    origin: "https://d39twl30is0v0r.cloudfront.net",
+    origin: "http://d39twl30is0v0r.cloudfront.net",
     credentials: true,
   }),
 );
