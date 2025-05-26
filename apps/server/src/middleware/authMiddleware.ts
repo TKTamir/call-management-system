@@ -6,8 +6,8 @@ export const authenticate = (
   res: Response,
   next: NextFunction,
 ): void => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.split(" ")[1];
+  // Get token from cookie instead of Authorization header
+  const token = req.cookies.accessToken;
 
   if (!token) {
     res.status(401).json({ message: "Access denied. No token provided." });

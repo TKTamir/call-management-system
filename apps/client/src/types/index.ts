@@ -15,8 +15,6 @@ export interface User {
 
 export interface AuthState {
   user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -78,8 +76,6 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   user: User;
-  accessToken: string;
-  refreshToken: string;
 }
 
 // Register
@@ -91,13 +87,8 @@ export interface RegisterRequest {
 }
 
 // Token
-export interface RefreshTokenRequest {
-  refreshToken: string;
-}
-
 export interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
+  message: string;
 }
 
 // Call

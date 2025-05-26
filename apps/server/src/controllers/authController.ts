@@ -9,6 +9,18 @@ import {
 } from "../utils/auth";
 import { createHandler } from "../utils/routeHandler";
 
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 15 * 60 * 1000, // 15 minutes
+};
+
+const refreshCookieOptions = {
+  ...cookieOptions,
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+};
+
 export const registerHandler = async (req: Request, res: Response) => {
   try {
     const { username, email, password, role } = req.body;
@@ -40,6 +52,10 @@ export const registerHandler = async (req: Request, res: Response) => {
 
     const { accessToken, refreshToken } = generateTokens(user.id, user.role);
 
+    // Set tokens as httpOnly cookies
+    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+
     res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -48,8 +64,6 @@ export const registerHandler = async (req: Request, res: Response) => {
         email: user.email,
         role: user.role,
       },
-      accessToken,
-      refreshToken,
     });
   } catch (error) {
     console.error("Register error:", error);
@@ -83,6 +97,10 @@ export const loginHandler = async (req: Request, res: Response) => {
 
     const { accessToken, refreshToken } = generateTokens(user.id, user.role);
 
+    // Set tokens as httpOnly cookies
+    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+
     res.status(200).json({
       user: {
         id: user.id,
@@ -90,8 +108,6 @@ export const loginHandler = async (req: Request, res: Response) => {
         email: user.email,
         role: user.role,
       },
-      accessToken,
-      refreshToken,
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -121,6 +137,10 @@ export const refreshTokenHandler = async (req: Request, res: Response) => {
     }
 
     const tokens = generateTokens(user.id, user.role);
+
+    // Set tokens as httpOnly cookies
+    res.cookie("accessToken", tokens.accessToken, cookieOptions);
+    res.cookie("refreshToken", tokens.refreshToken, refreshCookieOptions);
 
     res.status(200).json(tokens);
   } catch (error) {
@@ -154,7 +174,21 @@ export const getCurrentUserHandler = async (req: Request, res: Response) => {
   }
 };
 
+export const logoutHandler = async (req: Request, res: Response) => {
+  try {
+    // Clear cookies
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", refreshCookieOptions);
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const register = createHandler(registerHandler);
 export const login = createHandler(loginHandler);
 export const refreshToken = createHandler(refreshTokenHandler);
 export const getCurrentUser = createHandler(getCurrentUserHandler);
+export const logout = createHandler(logoutHandler);
