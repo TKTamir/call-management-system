@@ -1,5 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import type { Call, CallTask, Tag, Task } from "../types";
+import { logger } from "../utils/logger";
 
 // Define the events interface for type safety
 export interface ServerToClientEvents {
@@ -47,13 +48,13 @@ export const socket: SocketType = io(SERVER_URL || "http://localhost:3000", {
 
 // Connection event handlers
 socket.on("connect", () => {
-  console.log("Connected to server:", socket.id);
+  logger("Connected to server:", socket.id);
 });
 
 socket.on("disconnect", (reason) => {
-  console.log("Disconnected from server:", reason);
+  logger("Disconnected from server:", reason);
 });
 
 socket.on("connect_error", (error) => {
-  console.error("Connection error:", error);
+  logger("Connection error:", error);
 });

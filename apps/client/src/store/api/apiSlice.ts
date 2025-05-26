@@ -5,8 +5,9 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import { type RootState } from "../index";
 import { setTokens, logout } from "../slices/authSlice";
+import { logger } from "../../utils/logger";
+import { type RootState } from "../index";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 if (!SERVER_URL) {
@@ -41,7 +42,7 @@ const baseQueryWithReAuth: BaseQueryFn<
     const refreshToken = state.auth.refreshToken;
 
     if (refreshToken) {
-      console.log("Token expired, attempting refresh...");
+      logger("Token expired, attempting refresh...");
 
       // Try to refresh the token
       const refreshResult = await baseQuery(
@@ -63,18 +64,18 @@ const baseQueryWithReAuth: BaseQueryFn<
         // Update tokens in state
         api.dispatch(setTokens(newTokens));
 
-        console.log("Token refreshed successfully");
+        logger("Token refreshed successfully");
 
         // Retry the original request with new token
         result = await baseQuery(args, api, extraOptions);
       } else {
-        console.log("Token refresh failed, logging out");
+        logger("Token refresh failed, logging out");
         // Refresh failed, logout user
         api.dispatch(logout());
       }
     } else {
       // No refresh token available, logout
-      console.log("No refresh token available, logging out");
+      logger("No refresh token available, logging out");
       api.dispatch(logout());
     }
   }
