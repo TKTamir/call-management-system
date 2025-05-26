@@ -5,6 +5,11 @@ import * as http from "node:http";
 import { testConnection } from "./config/database";
 import { syncDatabase } from "./models";
 import { errorMiddleware } from "./middleware/errorMiddleware";
+import {
+  apiLimiter,
+  authLimiter,
+  globalLimiter,
+} from "./middleware/rateLimiterMiddleware";
 import { socketService } from "./sockets/socket";
 import authRoutes from "./routes/authRoutes";
 import callRoutes from "./routes/callRoutes";
@@ -30,6 +35,10 @@ app.use(
 
 app.use(express.json());
 
+// Rate Limiters
+app.use(globalLimiter);
+app.use("/api", apiLimiter);
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Call Management API is running");
 });
@@ -44,7 +53,7 @@ app.get("/api/status", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/calls", callRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/tasks", taskRoutes);
