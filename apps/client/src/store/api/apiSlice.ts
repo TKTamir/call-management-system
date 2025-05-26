@@ -5,9 +5,8 @@ import {
   type FetchArgs,
   type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import { setTokens, logout } from "../slices/authSlice";
+import { logout } from "../slices/authSlice";
 import { logger } from "../../utils/logger";
-import { type RootState } from "../index";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 if (!SERVER_URL) {
@@ -15,15 +14,9 @@ if (!SERVER_URL) {
 }
 const baseQuery = fetchBaseQuery({
   baseUrl: `${SERVER_URL}/api` || "http://localhost:3000/api",
-  prepareHeaders: (headers, { getState }) => {
-    const state = getState() as RootState;
-    const token = state.auth.accessToken;
-
-    // Add authorization header if we have a token
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
-    }
-
+  credentials: "include", // Send cookies with requests
+  prepareHeaders: (headers) => {
+    headers.set("Content-Type", "application/json");
     return headers;
   },
 });
@@ -38,44 +31,25 @@ const baseQueryWithReAuth: BaseQueryFn<
 
   // If we get a 401, try to refresh the token
   if (result.error && result.error.status === 401) {
-    const state = api.getState() as RootState;
-    const refreshToken = state.auth.refreshToken;
+    logger("Token expired, attempting refresh...");
 
-    if (refreshToken) {
-      logger("Token expired, attempting refresh...");
+    // Try to refresh the token
+    const refreshResult = await baseQuery(
+      {
+        url: "/auth/refresh-token",
+        method: "POST",
+      },
+      api,
+      extraOptions,
+    );
 
-      // Try to refresh the token
-      const refreshResult = await baseQuery(
-        {
-          url: "/auth/refresh-token",
-          method: "POST",
-          body: { refreshToken },
-        },
-        api,
-        extraOptions,
-      );
-
-      if (refreshResult.data) {
-        const newTokens = refreshResult.data as {
-          accessToken: string;
-          refreshToken: string;
-        };
-
-        // Update tokens in state
-        api.dispatch(setTokens(newTokens));
-
-        logger("Token refreshed successfully");
-
-        // Retry the original request with new token
-        result = await baseQuery(args, api, extraOptions);
-      } else {
-        logger("Token refresh failed, logging out");
-        // Refresh failed, logout user
-        api.dispatch(logout());
-      }
+    if (refreshResult.data) {
+      logger("Token refreshed successfully");
+      // Retry the original request with new token
+      result = await baseQuery(args, api, extraOptions);
     } else {
       // No refresh token available, logout
-      logger("No refresh token available, logging out");
+      logger("Token refresh failed, logging out");
       api.dispatch(logout());
     }
   }
