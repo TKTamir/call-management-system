@@ -6,8 +6,8 @@ import {
   useLogoutMutation,
 } from "../store/api";
 import {
-  setCredentials,
   logout as logoutAction,
+  setUser,
   selectCurrentUser,
   selectIsAuthenticated,
   selectIsAdmin,
@@ -36,14 +36,8 @@ export const useAuth = () => {
     try {
       const result = await loginMutation(credentials).unwrap();
 
-      // Store credentials in Redux state and localStorage
-      dispatch(
-        setCredentials({
-          user: result.user,
-          accessToken: result.accessToken,
-          refreshToken: result.refreshToken,
-        }),
-      );
+      // Store user data in Redux state
+      dispatch(setUser(result.user));
 
       // Navigate based on role
       if (result.user.role === "admin") {

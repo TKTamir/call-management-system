@@ -2,7 +2,6 @@ import { api } from "./apiSlice";
 import type {
   LoginRequest,
   LoginResponse,
-  RefreshTokenRequest,
   RefreshTokenResponse,
   RegisterRequest,
   User,
@@ -37,17 +36,19 @@ export const authApi = api.injectEndpoints({
     }),
 
     // Refresh token (handled automatically by baseQuery, but exposed for manual use)
-    refreshToken: builder.mutation<RefreshTokenResponse, RefreshTokenRequest>({
-      query: (tokenData) => ({
+    refreshToken: builder.mutation<RefreshTokenResponse, void>({
+      query: () => ({
         url: "/auth/refresh-token",
         method: "POST",
-        body: tokenData,
       }),
     }),
 
-    // Logout (client-side only, clears tokens)
+    // Logout
     logout: builder.mutation<void, void>({
-      queryFn: () => ({ data: undefined }),
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
+      }),
       invalidatesTags: [
         "User",
         "Tag",
