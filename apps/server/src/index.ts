@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import * as http from "node:http";
 import { testConnection } from "./config/database";
@@ -34,6 +35,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Rate Limiters
 app.use(globalLimiter);
