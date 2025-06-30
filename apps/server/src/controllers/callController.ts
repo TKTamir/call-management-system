@@ -76,6 +76,35 @@ const createCallHandler = async (
   return;
 };
 
+// Delete call
+// Used in the User view to delete calls
+const deleteCallHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { id } = req.params;
+
+  const call = await Call.findByPk(id);
+
+  if (!call) {
+    res.status(404).json({
+      success: false,
+      message: "Call not found",
+    });
+    return;
+  }
+
+  await call.destroy();
+
+  res.status(200).json({
+    success: true,
+    message: "Call deleted successfully",
+  });
+  return;
+};
+
 export const getAllCalls = createHandler(getAllCallsHandler);
 export const getCallById = createHandler(getCallByIdHandler);
 export const createCall = createHandler(createCallHandler);
+export const deleteCall = createHandler(deleteCallHandler);
