@@ -17,6 +17,7 @@ import {
   useAddTagsToCallMutation,
   useAddTaskToCallMutation,
   useGetSuggestedTasksForTagsMutation,
+  useDeleteCallMutation,
 } from "../store/api";
 import type { Call } from "../types";
 import { useErrorHandler } from "../hooks/useErrorHandler";
@@ -31,6 +32,8 @@ const Dashboard: React.FC = () => {
 
   const [createCall, { isLoading: isCreatingCall, error: createCallError }] =
     useCreateCallMutation();
+  const [deleteCall, { isLoading: isDeletingCall, error: deleteCallError }] =
+    useDeleteCallMutation();
   const [addTagsToCall, { isLoading: isAddingTags }] =
     useAddTagsToCallMutation();
   const [addTaskToCall, { isLoading: isAddingTask }] =
@@ -42,6 +45,7 @@ const Dashboard: React.FC = () => {
   useErrorHandler(callsError);
   useErrorHandler(tagsError);
   useErrorHandler(createCallError);
+  useErrorHandler(deleteCallError);
 
   // Local state
   const [view, setView] = useState<string>("main");
@@ -86,6 +90,18 @@ const Dashboard: React.FC = () => {
         setShowCallModal(false);
       } catch (error) {
         console.error("Failed to create call:", error);
+      }
+    }
+  };
+
+  const handleDeleteCall = async (callId: number) => {
+    if (callId) {
+      try {
+        await deleteCall(callId).unwrap();
+        toast.success("Call deleted successfully!");
+        setSelectedCall(undefined);
+      } catch (error) {
+        console.error("Failed to delete call:", error);
       }
     }
   };
@@ -177,6 +193,8 @@ const Dashboard: React.FC = () => {
           <MainContent />
         ) : (
           <DetailContent
+            handleDeleteCall={handleDeleteCall}
+            isDeletingCall={isDeletingCall}
             selectedCall={selectedCall}
             tags={callTags}
             tasks={callTasks}
