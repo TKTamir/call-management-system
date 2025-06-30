@@ -189,6 +189,9 @@ Create a new call (Protected)
 #### GET /api/calls/:id
 Get call by ID (Protected)
 
+#### DELETE /api/calls/:id
+Delete call by ID (Protected)
+
 #### POST /api/calls/:callId/tags
 Add tags to call (Protected)
 ```json
@@ -226,6 +229,9 @@ Update task status (Protected)
 #### GET /api/tags
 Get all tags (Protected)
 
+#### DELETE /api/tags/:id
+Delete tag by ID (Protected)
+
 #### POST /api/tags
 Create tag (Admin only)
 ```json
@@ -257,6 +263,9 @@ Link suggested task to tag (Admin only)
 
 #### GET /api/tasks/suggested
 Get all suggested tasks (Protected)
+
+#### DELETE /api/tasks/:id
+Delete task by ID (Protected)
 
 #### POST /api/tasks/suggested
 Create suggested task (Admin only)
