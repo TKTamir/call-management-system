@@ -2,8 +2,11 @@ import React from "react";
 import TagsSection from "../TagsSection/TagsSection";
 import TasksSection from "../TasksSection/TasksSection";
 import type { Call, Tag, CallTask } from "../../types";
+import Button from "../Button/Button";
 
 interface DetailContentProps {
+  handleDeleteCall: (callId: number) => void;
+  isDeletingCall: boolean;
   selectedCall: Call | undefined;
   tags: Tag[];
   tasks: CallTask[];
@@ -14,6 +17,8 @@ interface DetailContentProps {
 }
 
 const DetailContent: React.FC<DetailContentProps> = ({
+  handleDeleteCall,
+  isDeletingCall,
   selectedCall,
   tags,
   tasks,
@@ -33,9 +38,20 @@ const DetailContent: React.FC<DetailContentProps> = ({
   return (
     <div className="h-full w-full overflow-auto rounded-lg bg-white p-6 shadow-sm sm:w-2/3">
       <div className="flex h-full flex-col">
-        <h3 className="mb-4 text-xl font-semibold text-gray-900">
-          {selectedCall.name}
-        </h3>
+        <div className="flex flex-row justify-between p-2">
+          <h3 className="mb-4 text-xl font-semibold text-gray-900">
+            {selectedCall.name}
+          </h3>
+          <Button
+            buttonText={isDeletingCall ? "Deleting..." : "Delete"}
+            onClick={() => {
+              handleDeleteCall(selectedCall.id);
+            }}
+            className="bg-red-600 mb-2 text-white shadow-sm hover:bg-red-700 active:bg-red-800"
+            disabled={isDeletingCall}
+          />
+        </div>
+
         <TagsSection tags={tags} setShowTagModal={setShowTagModal} />
         <TasksSection
           callId={selectedCall.id}
