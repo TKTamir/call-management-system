@@ -117,7 +117,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 
 export const refreshTokenHandler = async (req: Request, res: Response) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
       res.status(400).json({ message: "Refresh token is required" });
