@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import Modal from "../components/Modal/Modal";
 import Sidebar from "../components/Sidebar/Sidebar";
 import MainContent from "../components/MainContent/MainContent";
@@ -21,6 +20,8 @@ import {
 } from "../store/api";
 import type { Call } from "../types";
 import { useErrorHandler } from "../hooks/useErrorHandler";
+import { useCrudOperations } from "../hooks/useCrudOperations";
+import { useModalState } from "../hooks/useModalState";
 
 const Dashboard: React.FC = () => {
   const {
@@ -41,6 +42,10 @@ const Dashboard: React.FC = () => {
   const [getSuggestedTasksForTags, { data: suggestedTasks = [] }] =
     useGetSuggestedTasksForTagsMutation();
 
+  // Custom hooks
+  const { executeOperation } = useCrudOperations();
+  const { openModal, closeModal, isModalOpen } = useModalState();
+
   // Error handling
   useErrorHandler(callsError);
   useErrorHandler(tagsError);
@@ -52,12 +57,6 @@ const Dashboard: React.FC = () => {
   const [selectedCall, setSelectedCall] = useState<Call | undefined>(undefined);
   const [newCallName, setNewCallName] = useState("");
   const [newTaskName, setNewTaskName] = useState("");
-
-  // Modal states
-  const [showCallModal, setShowCallModal] = useState(false);
-  const [showTagModal, setShowTagModal] = useState(false);
-  const [showTaskModal, setShowTaskModal] = useState(false);
-  const [showSuggestedTasksModal, setShowSuggestedTasksModal] = useState(false);
 
   // Get call-specific data
   const { data: callTasks = [] } = useGetCallTasksQuery(selectedCall?.id || 0, {
@@ -81,83 +80,65 @@ const Dashboard: React.FC = () => {
     setView("detail");
   };
 
-  const handleAddCall = async () => {
-    if (newCallName.trim()) {
-      try {
-        await createCall({ name: newCallName.trim() }).unwrap();
-        toast.success("Call created successfully!");
+  const handleAddCall = () => {
+    if (!newCallName.trim()) return;
+    executeOperation(() => createCall({ name: newCallName.trim() }).unwrap(), {
+      successMessage: "Call created successfully!",
+      onSuccess: () => {
         setNewCallName("");
-        setShowCallModal(false);
-      } catch (error) {
-        console.error("Failed to create call:", error);
-      }
-    }
+        closeModal("call");
+      },
+    });
   };
 
-  const handleDeleteCall = async (callId: number) => {
-    if (callId) {
-      try {
-        await deleteCall(callId).unwrap();
-        toast.success("Call deleted successfully!");
-        setSelectedCall(undefined);
-      } catch (error) {
-        console.error("Failed to delete call:", error);
-      }
-    }
+  const handleDeleteCall = (callId: number) => {
+    if (!callId) return;
+    executeOperation(() => deleteCall(callId).unwrap(), {
+      successMessage: "Call deleted successfully!",
+      onSuccess: () => setSelectedCall(undefined),
+    });
   };
 
-  // Add tags to call
-  const handleAddTagToCall = async (tagIds: number[]) => {
+  const handleAddTagToCall = (tagIds: number[]) => {
     if (!selectedCall || tagIds.length === 0) return;
-
-    try {
-      await addTagsToCall({
-        callId: selectedCall.id,
-        data: { tagIds },
-      }).unwrap();
-      toast.success("Tag added to call successfully!");
-      setShowTagModal(false);
-    } catch (error) {
-      console.error("Failed to add tags to call:", error);
-    }
+    executeOperation(
+      () =>
+        addTagsToCall({ callId: selectedCall.id, data: { tagIds } }).unwrap(),
+      {
+        successMessage: "Tag added to call successfully!",
+        onSuccess: () => closeModal("tag"),
+      },
+    );
   };
 
-  // Add custom task to call
-  const handleAddCustomTask = async () => {
+  const handleAddCustomTask = () => {
     if (!selectedCall || !newTaskName.trim()) return;
-
-    try {
-      await addTaskToCall({
-        callId: selectedCall.id,
-        data: {
-          taskName: newTaskName.trim(),
-          taskStatus: "Open",
+    executeOperation(
+      () =>
+        addTaskToCall({
+          callId: selectedCall.id,
+          data: { taskName: newTaskName.trim(), taskStatus: "Open" },
+        }).unwrap(),
+      {
+        successMessage: "Task added successfully!",
+        onSuccess: () => {
+          setNewTaskName("");
+          closeModal("task");
         },
-      }).unwrap();
-      toast.success("Task added successfully!");
-      setNewTaskName("");
-      setShowTaskModal(false);
-    } catch (error) {
-      console.error("Failed to add task to call:", error);
-    }
+      },
+    );
   };
 
-  // Add suggested task to call
-  const handleAddSuggestedTask = async (taskId: number) => {
+  const handleAddSuggestedTask = (taskId: number) => {
     if (!selectedCall) return;
-
-    try {
-      await addTaskToCall({
-        callId: selectedCall.id,
-        data: {
-          taskId,
-          taskStatus: "Open",
-        },
-      }).unwrap();
-      toast.success("Suggested task added successfully!");
-    } catch (error) {
-      console.error("Failed to add suggested task to call:", error);
-    }
+    executeOperation(
+      () =>
+        addTaskToCall({
+          callId: selectedCall.id,
+          data: { taskId, taskStatus: "Open" },
+        }).unwrap(),
+      { successMessage: "Suggested task added successfully!" },
+    );
   };
 
   // Check if tag is already added to call
@@ -181,8 +162,10 @@ const Dashboard: React.FC = () => {
           calls={calls}
           selectedCall={selectedCall}
           handleSelectCall={handleSelectCall}
-          showCallModal={showCallModal}
-          setShowCallModal={setShowCallModal}
+          showCallModal={isModalOpen("call")}
+          setShowCallModal={(show) =>
+            show ? openModal("call") : closeModal("call")
+          }
           newCallName={newCallName}
           setNewCallName={setNewCallName}
           handleAddCall={handleAddCall}
@@ -198,18 +181,23 @@ const Dashboard: React.FC = () => {
             selectedCall={selectedCall}
             tags={callTags}
             tasks={callTasks}
-            setShowTagModal={setShowTagModal}
-            setShowTaskModal={setShowTaskModal}
-            setShowSuggestedTasksModal={setShowSuggestedTasksModal}
+            setShowTagModal={(show) =>
+              show ? openModal("tag") : closeModal("tag")
+            }
+            setShowTaskModal={(show) =>
+              show ? openModal("task") : closeModal("task")
+            }
+            setShowSuggestedTasksModal={(show) =>
+              show ? openModal("suggestedTasks") : closeModal("suggestedTasks")
+            }
             suggestedTasksCount={suggestedTasks.length}
           />
         )}
       </div>
 
-      {/* Create Call Modal */}
       <Modal
-        isOpen={showCallModal}
-        onClose={() => setShowCallModal(false)}
+        isOpen={isModalOpen("call")}
+        onClose={() => closeModal("call")}
         name="New Call Name"
         inputValue={newCallName}
         onInputChange={(e) => setNewCallName(e.target.value)}
@@ -217,10 +205,9 @@ const Dashboard: React.FC = () => {
         submitButtonText={isCreatingCall ? "Creating..." : "Add Call"}
       />
 
-      {/* Create Custom Task Modal */}
       <Modal
-        isOpen={showTaskModal}
-        onClose={() => setShowTaskModal(false)}
+        isOpen={isModalOpen("task")}
+        onClose={() => closeModal("task")}
         name="New Task Name"
         inputValue={newTaskName}
         onInputChange={(e) => setNewTaskName(e.target.value)}
@@ -228,10 +215,9 @@ const Dashboard: React.FC = () => {
         submitButtonText={isAddingTask ? "Adding..." : "Add Task"}
       />
 
-      {/* Add Tags to Call Modal */}
       <Modal
-        isOpen={showTagModal}
-        onClose={() => setShowTagModal(false)}
+        isOpen={isModalOpen("tag")}
+        onClose={() => closeModal("tag")}
         name="Add Tags to Call"
         inputValue=""
         onInputChange={() => {}}
@@ -273,10 +259,9 @@ const Dashboard: React.FC = () => {
         </div>
       </Modal>
 
-      {/* Add Suggested Tasks Modal */}
       <Modal
-        isOpen={showSuggestedTasksModal}
-        onClose={() => setShowSuggestedTasksModal(false)}
+        isOpen={isModalOpen("suggestedTasks")}
+        onClose={() => closeModal("suggestedTasks")}
         name="Add Suggested Tasks"
         inputValue=""
         onInputChange={() => {}}
