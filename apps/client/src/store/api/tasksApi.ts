@@ -92,6 +92,20 @@ export const tasksApi = api.injectEndpoints({
       }),
       transformResponse: (response: ApiResponse<Task[]>) => response.data,
     }),
+
+    // Delete suggested task (Admin only)
+    deleteSuggestedTask: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/tasks/suggested/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: "SuggestedTask", id },
+        { type: "SuggestedTask", id: "LIST" },
+        { type: "Task", id: "LIST" },
+        { type: "TagTaskAssociation", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -102,4 +116,5 @@ export const {
   useCreateSuggestedTaskMutation,
   useUpdateSuggestedTaskMutation,
   useGetSuggestedTasksForTagsMutation,
+  useDeleteSuggestedTaskMutation,
 } = tasksApi;
