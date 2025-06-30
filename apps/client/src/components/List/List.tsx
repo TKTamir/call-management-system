@@ -2,20 +2,16 @@ import React from "react";
 import TagItem from "../TagItem/TagItem";
 import Button from "../Button/Button";
 import SuggestedTaskItem from "../SuggestedTask/SuggestedTaskItem";
-import type { Tag } from "../../types";
-
-interface SuggestedTask {
-  id: number;
-  name: string;
-}
+import type { Tag, Task } from "../../types";
 
 interface ListProps {
   variant: "tags" | "suggestedTasks";
   tags?: Tag[];
-  suggestedTasks?: SuggestedTask[];
+  suggestedTasks?: Task[];
   highlightIcon?: boolean;
   headingText?: string;
   onTagClick?: (tag: Tag) => void;
+  onTaskClick?: (task: Task) => void;
 }
 
 const List: React.FC<ListProps> = ({
@@ -24,6 +20,7 @@ const List: React.FC<ListProps> = ({
   suggestedTasks,
   highlightIcon = false,
   onTagClick,
+  onTaskClick,
 }) => {
   return (
     <>
@@ -52,10 +49,13 @@ const List: React.FC<ListProps> = ({
             {suggestedTasks?.map((suggestedTask) => (
               <Button
                 key={suggestedTask.id}
-                onClick={() => {}}
+                onClick={() => onTaskClick?.(suggestedTask)}
                 className="w-full rounded-lg bg-white p-4 text-left shadow-sm transition-all hover:bg-blue-50 hover:shadow-md active:bg-blue-100"
               >
-                <SuggestedTaskItem name={suggestedTask.name} />
+                <SuggestedTaskItem
+                  name={suggestedTask.name}
+                  highlightIcon={highlightIcon}
+                />
               </Button>
             ))}
             {suggestedTasks?.length === 0 && (

@@ -109,6 +109,18 @@ export const callsApi = api.injectEndpoints({
         { type: "Call", id: callId },
       ],
     }),
+
+    // Delete call (User view)
+    deleteCall: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/calls/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: "Call", id },
+        { type: "Call", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -121,4 +133,5 @@ export const {
   useGetCallTasksQuery,
   useAddTaskToCallMutation,
   useUpdateCallTaskStatusMutation,
+  useDeleteCallMutation,
 } = callsApi;

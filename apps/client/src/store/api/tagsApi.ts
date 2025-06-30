@@ -78,6 +78,19 @@ export const tagsApi = api.injectEndpoints({
         { type: "SuggestedTask", id: "LIST" },
       ],
     }),
+
+    // Delete tag (Admin only)
+    deleteTag: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/tags/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (_result, _error, id) => [
+        { type: "Tag", id },
+        { type: "Tag", id: "LIST" },
+        { type: "CallTag", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -88,4 +101,5 @@ export const {
   useUpdateTagMutation,
   useGetTagSuggestedTasksQuery,
   useAddSuggestedTaskToTagMutation,
+  useDeleteTagMutation,
 } = tagsApi;
