@@ -5,6 +5,7 @@ import {
   getSuggestedTasks,
   createSuggestedTask,
   updateSuggestedTask,
+  deleteSuggestedTask,
 } from "../controllers/taskController";
 import { getSuggestedTasksForTags } from "../controllers/tagTaskController";
 import { authenticate, requireAdmin } from "../middleware/authMiddleware";
@@ -15,6 +16,7 @@ const router = Router();
 router.get("/suggested", authenticate, getSuggestedTasks);
 router.post("/suggested", requireAdmin, createSuggestedTask);
 router.put("/suggested/:id", requireAdmin, updateSuggestedTask);
+router.delete("/suggested/:id", requireAdmin, deleteSuggestedTask);
 
 // Get suggested tasks for multiple tags (used by users in call management)
 router.post("/suggested/by-tags", authenticate, getSuggestedTasksForTags);

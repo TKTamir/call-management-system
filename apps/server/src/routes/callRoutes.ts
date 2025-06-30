@@ -3,6 +3,7 @@ import {
   getAllCalls,
   getCallById,
   createCall,
+  deleteCall,
 } from "../controllers/callController";
 import { addTagsToCall, getCallTags } from "../controllers/callTagController";
 import {
@@ -30,5 +31,6 @@ router.get("/:callId/tags", getCallTags);
 router.get("/", getAllCalls);
 router.get("/:id", getCallById);
 router.post("/", createCall);
+router.delete("/:id", deleteCall);
 
 export default router;
