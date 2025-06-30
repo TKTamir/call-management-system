@@ -145,8 +145,45 @@ const updateSuggestedTaskHandler = async (
   return;
 };
 
+// Delete suggested task
+// Used by the Admin to delete suggested tasks in the Admin view
+const deleteSuggestedTaskHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { id } = req.params;
+
+  const task = await Task.findByPk(id);
+
+  if (!task) {
+    res.status(404).json({
+      success: false,
+      message: "Task not found",
+    });
+    return;
+  }
+
+  if (!task.isSuggested) {
+    res.status(400).json({
+      success: false,
+      message: "Only suggested tasks can be deleted",
+    });
+    return;
+  }
+
+  await task.destroy();
+
+  res.status(200).json({
+    success: true,
+    message: "Suggested task deleted successfully",
+  });
+  return;
+};
+
 export const getAllTasks = createHandler(getAllTasksHandler);
 export const getTaskById = createHandler(getTaskByIdHandler);
 export const getSuggestedTasks = createHandler(getSuggestedTasksHandler);
 export const createSuggestedTask = createHandler(createSuggestedTaskHandler);
 export const updateSuggestedTask = createHandler(updateSuggestedTaskHandler);
+export const deleteSuggestedTask = createHandler(deleteSuggestedTaskHandler);

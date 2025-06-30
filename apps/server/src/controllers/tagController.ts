@@ -130,7 +130,36 @@ const updateTagHandler = async (
   return;
 };
 
+// Delete tag
+// Used by the Admin to delete tags in the Admin view
+const deleteTagHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  const { id } = req.params;
+
+  const tag = await Tag.findByPk(id);
+
+  if (!tag) {
+    res.status(404).json({
+      success: false,
+      message: "Tag not found",
+    });
+    return;
+  }
+
+  await tag.destroy();
+
+  res.status(200).json({
+    success: true,
+    message: "Tag deleted successfully",
+  });
+  return;
+};
+
 export const getAllTags = createHandler(getAllTagsHandler);
 export const getTagById = createHandler(getTagByIdHandler);
 export const createTag = createHandler(createTagHandler);
 export const updateTag = createHandler(updateTagHandler);
+export const deleteTag = createHandler(deleteTagHandler);
