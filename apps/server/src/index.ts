@@ -29,7 +29,7 @@ socketService.initialize(server);
 
 app.use(
   cors({
-    origin: "https://call-management-system.netlify.app/",
+    origin: "https://call-management-system.netlify.app",
     credentials: true,
   }),
 );

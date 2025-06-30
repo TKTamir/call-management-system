@@ -53,7 +53,7 @@ class SocketService {
   public initialize(server: HTTPServer): void {
     this.io = new SocketIOServer(server, {
       cors: {
-        origin: "https://call-management-system.netlify.app/",
+        origin: "https://call-management-system.netlify.app",
         methods: ["GET", "POST"],
         credentials: true,
       },
