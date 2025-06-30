@@ -8,7 +8,7 @@ const Home: React.FC = () => {
           <span className="text-3xl">📞</span>
         </div>
         <h2 className="mb-4 text-2xl font-bold text-gray-900">
-          Welcome to Cytactic
+          Welcome to Call Management System
         </h2>
         <p className="text-gray-600">
           Please sign in to access the application

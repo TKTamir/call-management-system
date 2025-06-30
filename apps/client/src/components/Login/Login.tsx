@@ -54,7 +54,7 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      name="Sign in to Cytactic"
+      name="Sign in to Call Management System"
       inputValue={username}
       onInputChange={(e: ChangeEvent<HTMLInputElement>) =>
         setUsername(e.target.value)

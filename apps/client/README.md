@@ -1,6 +1,6 @@
-# Cytactic Client - React Frontend
+# Call Management System Client - React Frontend
 
-Modern, responsive React application for the Cytactic Call Management System.
+Modern, responsive React application for the Call Management System.
 
 ## 🎨 Features
 

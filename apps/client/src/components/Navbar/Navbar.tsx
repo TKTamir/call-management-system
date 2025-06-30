@@ -25,7 +25,7 @@ const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center space-x-1 sm:space-x-2">
           <span className="text-xl sm:text-2xl">📞</span>
           <span className="text-base font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent sm:text-xl">
-            Cytactic
+            Call Management System
           </span>
         </div>
 

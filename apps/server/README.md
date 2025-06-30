@@ -1,6 +1,6 @@
-# Cytactic Server - Express Backend
+# Call Management System Server - Express Backend
 
-RESTful API server for the Cytactic Call Management System with real-time WebSocket support.
+RESTful API server for the Call Management System with real-time WebSocket support.
 
 ## 🚀 Features
 
@@ -117,10 +117,10 @@ npm install
 # Database
 DB_USER=postgres
 DB_PASS=your_password
-DB_NAME=cytactic_db
+DB_NAME=cms_db
 DB_HOST=localhost
 DB_PORT=5432
-DB_URL=postgresql://postgres:password@localhost:5432/cytactic_db
+DB_URL=postgresql://postgres:password@localhost:5432/cms_db
 
 # JWT Secrets (generate secure random strings)
 JWT_SECRET=your_jwt_secret_key
@@ -312,7 +312,7 @@ The server emits the following Socket.io events:
 
 ```bash
 # Create database
-createdb cytactic_db
+createdb cms_db
 
 # Run migrations (automatic on server start)
 # The server runs sequelize.sync() on startup
