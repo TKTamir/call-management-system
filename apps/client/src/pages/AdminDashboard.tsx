@@ -15,8 +15,12 @@ import {
   useAddSuggestedTaskToTagMutation,
   useGetTagSuggestedTasksQuery,
   useUpdateTagMutation,
+  useDeleteTagMutation,
+  useUpdateSuggestedTaskMutation,
+  useDeleteSuggestedTaskMutation,
 } from "../store/api";
 import { useErrorHandler } from "../hooks/useErrorHandler";
+import type { Tag, Task } from "types";
 
 const AdminDashboard: React.FC = () => {
   // RTK Query hooks
@@ -33,6 +37,10 @@ const AdminDashboard: React.FC = () => {
 
   const [createTag, { isLoading: isCreatingTag, error: createTagError }] =
     useCreateTagMutation();
+  const [deleteTag, { isLoading: isDeletingTag, error: deleteTagError }] =
+    useDeleteTagMutation();
+  const [deleteTask, { isLoading: isDeletingTask, error: deleteTaskError }] =
+    useDeleteSuggestedTaskMutation();
   const [
     createSuggestedTask,
     { isLoading: isCreatingTask, error: createTaskError },
@@ -42,28 +50,34 @@ const AdminDashboard: React.FC = () => {
 
   const [updateTag, { isLoading: isUpdatingTag, error: updateTagError }] =
     useUpdateTagMutation();
+  const [updateTask, { isLoading: isUpdatingTask, error: updateTaskError }] =
+    useUpdateSuggestedTaskMutation();
 
   // Error handling
   useErrorHandler(tagsError);
   useErrorHandler(tasksError);
   useErrorHandler(createTagError);
+  useErrorHandler(deleteTagError);
+  useErrorHandler(deleteTaskError);
   useErrorHandler(createTaskError);
   useErrorHandler(updateTagError);
+  useErrorHandler(updateTaskError);
 
   // Local state for UI
   const [activeView, setActiveView] = useState<"tags" | "suggestedTasks">(
     "tags",
   );
-  const [newTagName, setNewTagName] = useState("");
-  const [newSuggestedTaskName, setNewSuggestedTaskName] = useState("");
-  const [editingTagName, setEditingTagName] = useState("");
+  const [newTagName, setNewTagName] = useState<string>("");
+  const [newSuggestedTaskName, setNewSuggestedTaskName] = useState<string>("");
+  const [editingTagName, setEditingTagName] = useState<string>("");
+  const [editingTaskName, setEditingTaskName] = useState<string>("");
 
   // Modal state for linking suggested tasks to tags
-  const [showLinkTasksModal, setShowLinkTasksModal] = useState(false);
-  const [selectedTagForLinking, setSelectedTagForLinking] = useState<{
-    id: number;
-    name: string;
-  } | null>(null);
+  const [showTasksModal, setShowTasksModal] = useState<boolean>(false);
+  const [showLinkTasksModal, setShowLinkTasksModal] = useState<boolean>(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTagForLinking, setSelectedTagForLinking] =
+    useState<Tag | null>(null);
 
   // Get tasks already linked to selected tag
   const { data: linkedTasks = [] } = useGetTagSuggestedTasksQuery(
@@ -92,6 +106,32 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleDeleteTag = async (tagId?: Tag["id"]) => {
+    if (tagId) {
+      try {
+        await deleteTag(tagId).unwrap();
+        toast.success("Tag deleted successfully!");
+        setSelectedTagForLinking(null);
+        setShowLinkTasksModal(false);
+      } catch (error) {
+        console.error("Failed to delete call:", error);
+      }
+    }
+  };
+
+  const handleDeleteTask = async (taskId?: Task["id"]) => {
+    if (taskId) {
+      try {
+        await deleteTask(taskId).unwrap();
+        toast.success("Task deleted successfully!");
+        setSelectedTask(null);
+        setShowTasksModal(false);
+      } catch (error) {
+        console.error("Failed to delete call:", error);
+      }
+    }
+  };
+
   const handleAddSuggestedTask = async () => {
     if (newSuggestedTaskName.trim()) {
       try {
@@ -107,10 +147,17 @@ const AdminDashboard: React.FC = () => {
   };
 
   // Handle tag click to open link tasks modal
-  const handleTagClick = (tag: { id: number; name: string }) => {
+  const handleTagClick = (tag: Tag) => {
     setSelectedTagForLinking(tag);
     setEditingTagName(tag.name);
     setShowLinkTasksModal(true);
+  };
+
+  // Handle task click to open tasks modal
+  const handleTaskClick = (task: Task) => {
+    setSelectedTask(task);
+    setEditingTagName(task.name);
+    setShowTasksModal(true);
   };
 
   // Handle tag name update
@@ -137,6 +184,29 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  // Handle task name update
+  const handleUpdateTaskName = async () => {
+    if (!selectedTask || !editingTaskName.trim()) return;
+
+    if (editingTaskName.trim() === selectedTask.name) return;
+
+    try {
+      await updateTask({
+        id: selectedTask.id,
+        data: { name: editingTaskName.trim() },
+      }).unwrap();
+
+      // Update the local state to reflect the change
+      setSelectedTask(selectedTask);
+
+      toast.success(
+        `Task renamed to "${editingTaskName.trim()}" successfully!`,
+      );
+    } catch (error) {
+      console.error("Failed to update task name:", error);
+    }
+  };
+
   // Link suggested task to tag
   const handleLinkTaskToTag = async (taskId: number) => {
     if (!selectedTagForLinking) return;
@@ -154,8 +224,11 @@ const AdminDashboard: React.FC = () => {
 
   const handleCloseModal = () => {
     setShowLinkTasksModal(false);
+    setShowTasksModal(false);
     setSelectedTagForLinking(null);
+    setSelectedTask(null);
     setEditingTagName("");
+    setEditingTaskName("");
   };
 
   // Check if task is already linked
@@ -230,8 +303,59 @@ const AdminDashboard: React.FC = () => {
           suggestedTasks={suggestedTasks}
           highlightIcon={true}
           onTagClick={handleTagClick}
+          onTaskClick={handleTaskClick}
         />
       </Container>
+
+      {/* Modal for editing suggested tasks */}
+
+      <Modal
+        isOpen={showTasksModal}
+        onClose={handleCloseModal}
+        name={`Manage Task: "${selectedTask?.name}"`}
+        inputValue=""
+        onInputChange={() => {}}
+        onSubmit={() => {}}
+        submitButtonText=""
+      >
+        <div className="space-y-6">
+          <div>
+            <h4 className="mb-3 font-semibold text-gray-900">
+              Edit Task Name:
+            </h4>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={editingTaskName}
+              onChange={(e) => setEditingTaskName(e.target.value)}
+              className="flex-1 rounded-md border border-gray-300 px-3 py-2 shadow-sm transition-all duration-200 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-20 disabled:cursor-not-allowed disabled:opacity-50"
+              placeholder="Task name"
+              disabled={isUpdatingTask}
+            />
+            <Button
+              buttonText={isUpdatingTag ? "Saving..." : "Save"}
+              onClick={handleUpdateTaskName}
+              disabled={
+                isUpdatingTag ||
+                !editingTaskName.trim() ||
+                editingTaskName.trim() === selectedTask?.name
+              }
+              className="bg-blue-600 px-4 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300"
+            />
+          </div>
+          <div className="flex flex-row justify-center mt-6">
+            <Button
+              buttonText={isDeletingTask ? "Deleting..." : "Delete"}
+              onClick={() => {
+                handleDeleteTask(selectedTask?.id);
+              }}
+              className="bg-red-600 align-self-end text-white shadow-sm hover:bg-red-700 active:bg-red-800"
+              disabled={isDeletingTask}
+            />
+          </div>
+        </div>
+      </Modal>
 
       {/* Modal for linking suggested tasks to tags and editing tags */}
       <Modal
@@ -269,7 +393,9 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="mb-3 font-semibold text-gray-900">Link Suggested Tasks:</h4>
+            <h4 className="mb-3 font-semibold text-gray-900">
+              Link Suggested Tasks:
+            </h4>
             <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg bg-gray-50 p-3">
               {suggestedTasks.map((task) => (
                 <div
@@ -297,9 +423,22 @@ const AdminDashboard: React.FC = () => {
 
             {suggestedTasks.length === 0 && (
               <div className="rounded-lg bg-gray-50 p-8 text-center">
-                <p className="text-gray-500">No suggested tasks available. Create some tasks first.</p>
+                <p className="text-gray-500">
+                  No suggested tasks available. Create some tasks first.
+                </p>
               </div>
             )}
+
+            <div className="flex flex-row justify-center mt-6">
+              <Button
+                buttonText={isDeletingTag ? "Deleting..." : "Delete"}
+                onClick={() => {
+                  handleDeleteTag(selectedTagForLinking?.id);
+                }}
+                className="bg-red-600 align-self-end text-white shadow-sm hover:bg-red-700 active:bg-red-800"
+                disabled={isDeletingTag}
+              />
+            </div>
           </div>
         </div>
       </Modal>
