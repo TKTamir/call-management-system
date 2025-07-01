@@ -47,7 +47,7 @@ const DetailContent: React.FC<DetailContentProps> = ({
             onClick={() => {
               handleDeleteCall(selectedCall.id);
             }}
-            className="bg-red-600 mb-2 text-white shadow-sm hover:bg-red-700 active:bg-red-800"
+            className="bg-red-600 mb-2 pb-4 max-h-8 text-white shadow-sm hover:bg-red-700 active:bg-red-800"
             disabled={isDeletingCall}
           />
         </div>
