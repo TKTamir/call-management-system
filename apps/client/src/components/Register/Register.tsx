@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 import { useAuth } from "../../hooks/useAuth";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useRegisterMutation } from "../../store/api";
+import { validateRegister } from "../../utils/validation";
 
 export interface RegisterProps {
   isOpen: boolean;
@@ -23,18 +24,7 @@ const Register: React.FC<RegisterProps> = ({ isOpen, onClose }) => {
   useErrorHandler(error);
 
   const handleRegister = async () => {
-    if (!email.trim()) {
-      toast.error("Email is required");
-      return;
-    }
-
-    if (!username.trim()) {
-      toast.error("Username is required");
-      return;
-    }
-
-    if (!password.trim()) {
-      toast.error("Password is required");
+    if (!validateRegister({ email, username, password })) {
       return;
     }
 

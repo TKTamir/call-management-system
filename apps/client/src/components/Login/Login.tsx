@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 import { useAuth } from "../../hooks/useAuth";
 import { useErrorHandler } from "../../hooks/useErrorHandler";
 import { useLoginMutation } from "../../store/api";
+import { validateLogin } from "../../utils/validation";
 
 export interface LoginProps {
   isOpen: boolean;
@@ -21,13 +22,7 @@ const Login: React.FC<LoginProps> = ({ isOpen, onClose }) => {
   useErrorHandler(error);
 
   const handleLogin = async () => {
-    if (!username.trim()) {
-      toast.error("Username is required");
-      return;
-    }
-
-    if (!password.trim()) {
-      toast.error("Password is required");
+    if (!validateLogin({ username, password })) {
       return;
     }
 
