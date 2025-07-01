@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Routes,
   Route,
@@ -15,11 +15,13 @@ import AdminDashboard from "../../pages/AdminDashboard";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import Button from "../Button/Button";
+import Register from "../Register/Register";
+import { useModalState } from "../../hooks/useModalState";
 
 const AppContent: React.FC = () => {
   const { isAdmin, isAuthenticated, isLoading, refreshUserData, logout, user } =
     useAuth();
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { openModal, closeModal, isModalOpen } = useModalState();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,7 +34,7 @@ const AppContent: React.FC = () => {
   // Handle login success - redirect based on role
   useEffect(() => {
     if (isAuthenticated && user) {
-      setShowLoginModal(false);
+      closeModal("login");
 
       // Only redirect from home page
       if (location.pathname === "/" || location.pathname === "/home") {
@@ -49,10 +51,6 @@ const AppContent: React.FC = () => {
     return <LoadingSpinner fullScreen text="Loading your dashboard..." />;
   }
 
-  const handleLoginClick = () => {
-    setShowLoginModal(true);
-  };
-
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -64,10 +62,18 @@ const AppContent: React.FC = () => {
         isLoggedIn={isAuthenticated}
         isAdmin={isAdmin}
         onLogout={handleLogout}
-        onLoginClick={handleLoginClick}
+        onLoginClick={() => openModal("login")}
+        onRegisterClick={() => openModal("register")}
         currentPath={location.pathname}
       />
-      <Login isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <Login
+        isOpen={isModalOpen("login")}
+        onClose={() => closeModal("login")}
+      />
+      <Register
+        isOpen={isModalOpen("register")}
+        onClose={() => closeModal("register")}
+      />
       <div className="mt-12 sm:mt-16 flex flex-grow items-center justify-center p-4">
         <Routes>
           <Route
@@ -124,7 +130,7 @@ const AppContent: React.FC = () => {
                 </p>
                 <Button
                   buttonText="Sign In"
-                  onClick={handleLoginClick}
+                  onClick={() => openModal("login")}
                   className="bg-blue-600 px-6 text-white shadow-sm hover:bg-blue-700 active:bg-blue-800"
                 />
               </div>
