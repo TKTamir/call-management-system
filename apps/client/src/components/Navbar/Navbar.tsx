@@ -6,6 +6,7 @@ interface NavbarProps {
   currentPath: string;
   onLogout: () => void;
   onLoginClick: () => void;
+  onRegisterClick: () => void;
   isLoggedIn?: boolean;
   isAdmin?: boolean;
 }
@@ -15,6 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({
   isLoggedIn,
   isAdmin,
   onLoginClick,
+  onRegisterClick,
   currentPath,
 }) => {
   const navigate = useNavigate();
@@ -62,12 +64,20 @@ const Navbar: React.FC<NavbarProps> = ({
               Sign out
             </Button>
           ) : (
-            <Button
-              onClick={onLoginClick}
-              className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 shadow-sm transition-all hover:shadow-md sm:px-5 sm:py-2 sm:text-sm"
-            >
-              Sign in
-            </Button>
+            <div className="flex flex-row gap-4">
+              <Button
+                onClick={onRegisterClick}
+                className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 active:bg-gray-100 transition-colors sm:px-5 sm:py-2 sm:text-sm"
+              >
+                Sign up
+              </Button>
+              <Button
+                onClick={onLoginClick}
+                className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 shadow-sm transition-all hover:shadow-md sm:px-5 sm:py-2 sm:text-sm"
+              >
+                Sign in
+              </Button>
+            </div>
           )}
         </div>
       </div>
